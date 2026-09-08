@@ -1,0 +1,6 @@
+{
+  "name": "Quote Studio",
+  "description": "CapCut-style design studio for creating, styling, batching, and exporting custom quote cards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
