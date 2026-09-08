@@ -11,8 +11,8 @@ import com.example.data.local.QuoteDatabase
 import com.example.data.local.SettingsPreferences
 import com.example.data.repository.QuoteRepository
 import com.example.ui.screens.MainAppScaffold
-import com.example.ui.theme.QuoteStudioTheme
-import com.example.ui.theme.StudioDarkBg
+import com.example.ui.theme.QuoteGenTheme
+import com.example.ui.theme.StudioAppBg
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,10 +24,10 @@ class MainActivity : ComponentActivity() {
     val repository = QuoteRepository(database.quoteDao(), settings)
 
     setContent {
-      QuoteStudioTheme {
+      QuoteGenTheme {
         Surface(
           modifier = Modifier.fillMaxSize(),
-          color = StudioDarkBg
+          color = StudioAppBg
         ) {
           MainAppScaffold(repository = repository)
         }

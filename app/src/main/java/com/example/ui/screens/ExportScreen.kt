@@ -2,6 +2,7 @@ package com.example.ui.screens
 
 import android.graphics.Bitmap
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -94,7 +95,7 @@ fun ExportScreen(
                         text = "Export Quote",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
-                        color = Color.White
+                        color = StudioTextPrimary
                     )
                 },
                 navigationIcon = {
@@ -105,7 +106,7 @@ fun ExportScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = Color.White
+                            tint = StudioTextPrimary
                         )
                     }
                 },
@@ -117,14 +118,14 @@ fun ExportScreen(
                         Icon(
                             imageVector = Icons.Default.Home,
                             contentDescription = "Home",
-                            tint = Color.White
+                            tint = StudioTextPrimary
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = StudioDarkBg)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = StudioSurface)
             )
         },
-        containerColor = StudioDarkBg
+        containerColor = StudioAppBg
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -146,6 +147,7 @@ fun ExportScreen(
             // 2. RESOLUTION SELECTOR CHIPS
             Card(
                 colors = CardDefaults.cardColors(containerColor = StudioSurface),
+                border = BorderStroke(1.dp, StudioCardBorder),
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -156,7 +158,7 @@ fun ExportScreen(
                     Text(
                         text = "Output Quality",
                         style = MaterialTheme.typography.titleSmall,
-                        color = Color.White,
+                        color = StudioTextPrimary,
                         fontWeight = FontWeight.Bold
                     )
 
@@ -190,7 +192,7 @@ fun ExportScreen(
                                     text = label,
                                     fontSize = 11.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                    color = Color.White
+                                    color = if (isSelected) Color.White else StudioTextPrimary
                                 )
                             }
                         }
@@ -206,13 +208,13 @@ fun ExportScreen(
                             Text(
                                 text = "Include Watermark",
                                 fontSize = 13.sp,
-                                color = Color.White,
+                                color = StudioTextPrimary,
                                 fontWeight = FontWeight.SemiBold
                             )
                             Text(
                                 text = exportSpec.watermarkHandle,
                                 fontSize = 11.sp,
-                                color = Color.White.copy(alpha = 0.6f)
+                                color = StudioTextSecondary
                             )
                         }
                         Switch(
@@ -221,6 +223,7 @@ fun ExportScreen(
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = Color.White,
                                 checkedTrackColor = StudioPrimary,
+                                uncheckedThumbColor = StudioTextMuted,
                                 uncheckedTrackColor = StudioSurfaceVariant
                             )
                         )
@@ -247,7 +250,7 @@ fun ExportScreen(
                     if (isRendering) {
                         CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Rendering HD Card...", fontWeight = FontWeight.Bold)
+                        Text("Rendering HD Card...", fontWeight = FontWeight.Bold, color = Color.White)
                     } else {
                         Icon(
                             imageVector = if (isSavedToGallery) Icons.Default.CheckCircle else Icons.Default.Download,
@@ -258,7 +261,8 @@ fun ExportScreen(
                         Text(
                             text = if (isSavedToGallery) "Saved to Gallery! Tap to Save Again" else "Save HD to Gallery",
                             fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
                         )
                     }
                 }
@@ -267,15 +271,16 @@ fun ExportScreen(
                 OutlinedButton(
                     onClick = { handleShare() },
                     shape = RoundedCornerShape(14.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = StudioPrimaryVariant),
+                    border = BorderStroke(1.dp, StudioPrimary),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
                         .testTag("share_quote_button")
                 ) {
-                    Icon(Icons.Default.Share, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Icon(Icons.Default.Share, contentDescription = null, modifier = Modifier.size(18.dp), tint = StudioPrimaryVariant)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Share Quote Card", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                    Text("Share Quote Card", fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = StudioPrimaryVariant)
                 }
 
                 // Save to History Button
@@ -285,7 +290,7 @@ fun ExportScreen(
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.filledTonalButtonColors(
                         containerColor = StudioSurfaceVariant,
-                        contentColor = Color.White
+                        contentColor = StudioTextPrimary
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -295,13 +300,14 @@ fun ExportScreen(
                     Icon(
                         imageVector = if (isSavedToHistory) Icons.Default.BookmarkAdded else Icons.Default.BookmarkBorder,
                         contentDescription = null,
-                        tint = if (isSavedToHistory) StudioPrimary else Color.White
+                        tint = if (isSavedToHistory) StudioPrimary else StudioTextPrimary
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = if (isSavedToHistory) "Saved to History" else "Save to Studio History",
                         fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        color = StudioTextPrimary
                     )
                 }
             }

@@ -1,6 +1,7 @@
 package com.example.ui.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,11 +35,7 @@ import com.example.data.repository.QuoteRepository
 import com.example.ui.components.QuoteCanvasView
 import com.example.ui.renderer.ExportManager
 import com.example.ui.renderer.QuoteBitmapRenderer
-import com.example.ui.theme.StudioCardBorder
-import com.example.ui.theme.StudioDarkBg
-import com.example.ui.theme.StudioPrimary
-import com.example.ui.theme.StudioSurface
-import com.example.ui.theme.StudioSurfaceVariant
+import com.example.ui.theme.*
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,13 +59,13 @@ fun HistoryScreen(
                         text = "Saved History",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
-                        color = Color.White
+                        color = StudioTextPrimary
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = StudioDarkBg)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = StudioSurface)
             )
         },
-        containerColor = StudioDarkBg
+        containerColor = StudioAppBg
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -102,7 +99,7 @@ fun HistoryScreen(
                         text = "No Saved Cards Yet",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = StudioTextPrimary
                     )
 
                     Spacer(modifier = Modifier.height(6.dp))
@@ -110,7 +107,7 @@ fun HistoryScreen(
                     Text(
                         text = "Cards you explicitly choose to save after exporting will appear in this private vault.",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White.copy(alpha = 0.6f),
+                        color = StudioTextSecondary,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
                 }
@@ -131,6 +128,7 @@ fun HistoryScreen(
                         Card(
                             shape = RoundedCornerShape(14.dp),
                             colors = CardDefaults.cardColors(containerColor = StudioSurface),
+                            border = BorderStroke(1.dp, StudioCardBorder),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable { selectedQuoteForDialog = entity }
@@ -150,7 +148,7 @@ fun HistoryScreen(
                                 Text(
                                     text = entity.text,
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = Color.White,
+                                    color = StudioTextPrimary,
                                     maxLines = 2,
                                     overflow = TextOverflow.Ellipsis,
                                     fontWeight = FontWeight.Medium
@@ -170,6 +168,7 @@ fun HistoryScreen(
             Card(
                 shape = RoundedCornerShape(20.dp),
                 colors = CardDefaults.cardColors(containerColor = StudioSurface),
+                border = BorderStroke(1.dp, StudioCardBorder),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
@@ -200,9 +199,9 @@ fun HistoryScreen(
                             shape = RoundedCornerShape(10.dp),
                             modifier = Modifier.weight(1f)
                         ) {
-                            Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(16.dp))
+                            Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(16.dp), tint = Color.White)
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("Edit", fontSize = 13.sp)
+                            Text("Edit", fontSize = 13.sp, color = Color.White)
                         }
 
                         // Share
@@ -214,12 +213,13 @@ fun HistoryScreen(
                                 }
                             },
                             shape = RoundedCornerShape(10.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = StudioPrimaryVariant),
+                            border = BorderStroke(1.dp, StudioPrimary),
                             modifier = Modifier.weight(1f)
                         ) {
-                            Icon(Icons.Default.IosShare, contentDescription = null, modifier = Modifier.size(16.dp))
+                            Icon(Icons.Default.IosShare, contentDescription = null, modifier = Modifier.size(16.dp), tint = StudioPrimaryVariant)
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("Share", fontSize = 13.sp)
+                            Text("Share", fontSize = 13.sp, color = StudioPrimaryVariant)
                         }
 
                         // Delete
@@ -235,7 +235,7 @@ fun HistoryScreen(
                             Icon(
                                 imageVector = Icons.Default.Delete,
                                 contentDescription = "Delete",
-                                tint = Color.Red.copy(alpha = 0.8f)
+                                tint = Color(0xFFD32F2F)
                             )
                         }
                     }

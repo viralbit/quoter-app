@@ -1,39 +1,49 @@
 package com.example.ui.theme
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-private val QuoteStudioColorScheme = darkColorScheme(
+private val QuoteGenLightColorScheme = lightColorScheme(
     primary = StudioPrimary,
     onPrimary = Color.White,
-    primaryContainer = StudioSurfaceVariant,
-    onPrimaryContainer = StudioTextPrimary,
+    primaryContainer = StudioGreenTint,
+    onPrimaryContainer = StudioPrimaryVariant,
     secondary = StudioSecondary,
-    onSecondary = Color.Black,
+    onSecondary = Color.White,
     secondaryContainer = StudioSurfaceVariant,
     onSecondaryContainer = StudioTextPrimary,
     tertiary = StudioTertiary,
     onTertiary = Color.White,
-    background = StudioDarkBg,
+    background = StudioAppBg,
     onBackground = StudioTextPrimary,
     surface = StudioSurface,
     onSurface = StudioTextPrimary,
     surfaceVariant = StudioSurfaceVariant,
     onSurfaceVariant = StudioTextSecondary,
     outline = StudioCardBorder,
+    outlineVariant = StudioGreenGlow,
     error = StudioError,
     onError = Color.White
 )
 
 @Composable
-fun QuoteStudioTheme(
+fun QuoteGenTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colorScheme = QuoteStudioColorScheme,
+        colorScheme = QuoteGenLightColorScheme,
         typography = Typography,
         content = content
     )
 }
+
+// Backwards compatibility alias for components and tests
+@Composable
+fun QuoteStudioTheme(
+    content: @Composable () -> Unit
+) {
+    QuoteGenTheme(content = content)
+}
+

@@ -17,8 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.model.QuoteCardSpec
-import com.example.ui.theme.StudioPrimary
-import com.example.ui.theme.StudioSurfaceVariant
+import com.example.ui.theme.*
 
 @Composable
 fun WatermarkControls(
@@ -42,13 +41,13 @@ fun WatermarkControls(
                 Text(
                     text = "Watermark Chip",
                     style = MaterialTheme.typography.titleSmall,
-                    color = Color.White,
+                    color = StudioTextPrimary,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = "Subtle gradient pill with your handle",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.White.copy(alpha = 0.6f)
+                    color = StudioTextSecondary
                 )
             }
             Switch(
@@ -57,6 +56,7 @@ fun WatermarkControls(
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
                     checkedTrackColor = StudioPrimary,
+                    uncheckedThumbColor = StudioTextMuted,
                     uncheckedTrackColor = StudioSurfaceVariant
                 ),
                 modifier = Modifier.testTag("watermark_toggle")
@@ -74,11 +74,14 @@ fun WatermarkControls(
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = StudioPrimary,
-                    unfocusedBorderColor = StudioSurfaceVariant,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                    focusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.5f),
-                    unfocusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.5f)
+                    unfocusedBorderColor = StudioCardBorder,
+                    focusedTextColor = StudioTextPrimary,
+                    unfocusedTextColor = StudioTextPrimary,
+                    focusedLabelColor = StudioPrimaryVariant,
+                    unfocusedLabelColor = StudioTextSecondary,
+                    cursorColor = StudioPrimary,
+                    focusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f),
+                    unfocusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f)
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -90,7 +93,8 @@ fun WatermarkControls(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(14.dp))
-                    .background(StudioSurfaceVariant.copy(alpha = 0.5f))
+                    .background(StudioSurface)
+                    .border(1.dp, StudioCardBorder, RoundedCornerShape(14.dp))
                     .padding(14.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
@@ -106,7 +110,7 @@ fun WatermarkControls(
                         Text(
                             text = "Opacity",
                             style = MaterialTheme.typography.labelLarge,
-                            color = Color.White.copy(alpha = 0.85f),
+                            color = StudioTextPrimary,
                             fontWeight = FontWeight.SemiBold
                         )
                     }
@@ -115,14 +119,14 @@ fun WatermarkControls(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(8.dp))
-                            .background(StudioPrimary.copy(alpha = 0.2f))
-                            .border(1.dp, StudioPrimary.copy(alpha = 0.4f), RoundedCornerShape(8.dp))
+                            .background(StudioGreenTint)
+                            .border(1.dp, StudioCardBorder, RoundedCornerShape(8.dp))
                             .padding(horizontal = 10.dp, vertical = 4.dp)
                     ) {
                         Text(
                             text = "${(spec.watermarkOpacity * 100).toInt()}%",
                             style = MaterialTheme.typography.labelMedium,
-                            color = StudioPrimary,
+                            color = StudioPrimaryVariant,
                             fontWeight = FontWeight.ExtraBold
                         )
                     }
@@ -143,8 +147,9 @@ fun WatermarkControls(
                             .size(32.dp)
                             .clip(CircleShape)
                             .background(StudioSurfaceVariant)
+                            .border(1.dp, StudioCardBorder, CircleShape)
                     ) {
-                        Text("-", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text("-", color = StudioTextPrimary, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     }
 
                     StudioSlider(
@@ -166,8 +171,9 @@ fun WatermarkControls(
                             .size(32.dp)
                             .clip(CircleShape)
                             .background(StudioSurfaceVariant)
+                            .border(1.dp, StudioCardBorder, CircleShape)
                     ) {
-                        Text("+", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text("+", color = StudioTextPrimary, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     }
                 }
 
@@ -191,6 +197,7 @@ fun WatermarkControls(
                                 .height(30.dp)
                                 .clip(RoundedCornerShape(8.dp))
                                 .background(if (isSelected) StudioPrimary else StudioSurfaceVariant)
+                                .border(1.dp, if (isSelected) StudioPrimary else StudioCardBorder, RoundedCornerShape(8.dp))
                                 .clickable { onSpecChange(spec.copy(watermarkOpacity = value)) }
                                 .testTag("opacity_preset_$label")
                         ) {
@@ -198,7 +205,7 @@ fun WatermarkControls(
                                 text = label,
                                 fontSize = 11.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                color = if (isSelected) Color.White else Color.White.copy(alpha = 0.7f)
+                                color = if (isSelected) Color.White else StudioTextPrimary
                             )
                         }
                     }
@@ -210,7 +217,7 @@ fun WatermarkControls(
                 Text(
                     text = "Position",
                     style = MaterialTheme.typography.labelLarge,
-                    color = Color.White.copy(alpha = 0.8f),
+                    color = StudioTextPrimary,
                     fontWeight = FontWeight.SemiBold
                 )
                 Row(
@@ -218,6 +225,7 @@ fun WatermarkControls(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(12.dp))
                         .background(StudioSurfaceVariant)
+                        .border(1.dp, StudioCardBorder, RoundedCornerShape(12.dp))
                         .padding(4.dp),
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
@@ -243,7 +251,7 @@ fun WatermarkControls(
                                 text = label,
                                 fontSize = 11.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                color = if (isSelected) Color.White else Color.White.copy(alpha = 0.7f)
+                                color = if (isSelected) Color.White else StudioTextPrimary
                             )
                         }
                     }

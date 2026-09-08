@@ -1,7 +1,9 @@
 package com.example.ui.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,11 +34,7 @@ import com.example.ui.components.QuoteCanvasView
 import com.example.ui.components.StudioSlider
 import com.example.ui.components.StylingControls
 import com.example.ui.renderer.ExportManager
-import com.example.ui.theme.StudioCardBorder
-import com.example.ui.theme.StudioDarkBg
-import com.example.ui.theme.StudioPrimary
-import com.example.ui.theme.StudioSurface
-import com.example.ui.theme.StudioSurfaceVariant
+import com.example.ui.theme.*
 import kotlinx.coroutines.launch
 
 data class BatchQuoteItem(
@@ -124,7 +122,7 @@ fun BatchEditorScreen(
                         text = "Batch Studio (${quotes.size} Cards)",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
-                        color = Color.White
+                        color = StudioTextPrimary
                     )
                 },
                 navigationIcon = {
@@ -135,7 +133,7 @@ fun BatchEditorScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = Color.White
+                            tint = StudioTextPrimary
                         )
                     }
                 },
@@ -152,20 +150,22 @@ fun BatchEditorScreen(
                         Icon(
                             imageVector = Icons.Default.Download,
                             contentDescription = null,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(16.dp),
+                            tint = Color.White
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = if (isExporting) "Exporting ${exportProgress.first}/${exportProgress.second}" else "Export All",
                             fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = StudioDarkBg)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = StudioSurface)
             )
         },
-        containerColor = StudioDarkBg
+        containerColor = StudioAppBg
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -200,13 +200,14 @@ fun BatchEditorScreen(
                                     .size(32.dp)
                                     .clip(CircleShape)
                                     .background(if (isSelected) StudioPrimary else StudioSurfaceVariant)
+                                    .border(1.dp, if (isSelected) StudioPrimary else StudioCardBorder, CircleShape)
                                     .clickable { previewIndex = index }
                             ) {
                                 Text(
                                     text = "${index + 1}",
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.White
+                                    color = if (isSelected) Color.White else StudioTextPrimary
                                 )
                             }
                         }
@@ -218,6 +219,7 @@ fun BatchEditorScreen(
             item {
                 Card(
                     colors = CardDefaults.cardColors(containerColor = StudioSurface),
+                    border = BorderStroke(1.dp, StudioCardBorder),
                     shape = RoundedCornerShape(16.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -226,7 +228,7 @@ fun BatchEditorScreen(
                             text = "Shared Batch Theme & Styling",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = StudioTextPrimary
                         )
 
                         // Font size slider for batch
@@ -237,12 +239,12 @@ fun BatchEditorScreen(
                             Text(
                                 text = "Shared Font Size",
                                 style = MaterialTheme.typography.labelMedium,
-                                color = Color.White.copy(alpha = 0.8f)
+                                color = StudioTextSecondary
                             )
                             Text(
                                 text = "${sharedSpec.fontSize.toInt()} sp",
                                 style = MaterialTheme.typography.labelMedium,
-                                color = StudioPrimary,
+                                color = StudioPrimaryVariant,
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -273,7 +275,7 @@ fun BatchEditorScreen(
                         text = "Batch Quotes (${quotes.size})",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = StudioTextPrimary
                     )
 
                     OutlinedButton(
@@ -281,7 +283,8 @@ fun BatchEditorScreen(
                             quotes.add(BatchQuoteItem())
                             previewIndex = quotes.lastIndex
                         },
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = StudioPrimary),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = StudioPrimaryVariant),
+                        border = BorderStroke(1.dp, StudioPrimary),
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.testTag("add_quote_button")
                     ) {
@@ -293,10 +296,12 @@ fun BatchEditorScreen(
             }
 
             itemsIndexed(quotes) { index, item ->
+                val isCurrent = index == previewIndex
                 Card(
                     colors = CardDefaults.cardColors(
-                        containerColor = if (index == previewIndex) StudioSurfaceVariant else StudioSurface
+                        containerColor = if (isCurrent) StudioGreenTint else StudioSurface
                     ),
+                    border = BorderStroke(1.dp, if (isCurrent) StudioPrimary else StudioCardBorder),
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -315,7 +320,7 @@ fun BatchEditorScreen(
                                 text = "Card #${index + 1}",
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = StudioPrimary
+                                color = StudioPrimaryVariant
                             )
 
                             if (quotes.size > 1) {
@@ -331,7 +336,7 @@ fun BatchEditorScreen(
                                     Icon(
                                         imageVector = Icons.Default.Delete,
                                         contentDescription = "Remove Quote",
-                                        tint = Color.Red.copy(alpha = 0.7f),
+                                        tint = Color(0xFFD32F2F),
                                         modifier = Modifier.size(18.dp)
                                     )
                                 }
@@ -352,8 +357,13 @@ fun BatchEditorScreen(
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedBorderColor = StudioPrimary,
                                 unfocusedBorderColor = StudioCardBorder,
-                                focusedTextColor = Color.White,
-                                unfocusedTextColor = Color.White
+                                focusedTextColor = StudioTextPrimary,
+                                unfocusedTextColor = StudioTextPrimary,
+                                focusedLabelColor = StudioPrimaryVariant,
+                                unfocusedLabelColor = StudioTextSecondary,
+                                cursorColor = StudioPrimary,
+                                focusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f),
+                                unfocusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f)
                             ),
                             modifier = Modifier.fillMaxWidth()
                         )

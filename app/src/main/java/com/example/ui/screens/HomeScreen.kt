@@ -1,5 +1,6 @@
 package com.example.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -62,22 +63,22 @@ fun HomeScreen(
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {
                             Text(
-                                text = "Quote Studio",
+                                text = "Quote Gen",
                                 fontWeight = FontWeight.ExtraBold,
                                 fontSize = 18.sp,
-                                color = Color.White,
+                                color = StudioTextPrimary,
                                 letterSpacing = 0.5.sp
                             )
                             Text(
-                                text = "Blank Canvas Editor",
+                                text = "Creative Studio",
                                 fontSize = 11.sp,
-                                color = StudioSecondary,
-                                fontWeight = FontWeight.Medium
+                                color = StudioPrimaryVariant,
+                                fontWeight = FontWeight.SemiBold
                             )
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = StudioDarkBg)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = StudioSurface)
             )
         },
         floatingActionButton = {
@@ -92,11 +93,13 @@ fun HomeScreen(
                 // Secondary FAB: New Batch
                 ExtendedFloatingActionButton(
                     onClick = onNewBatch,
-                    containerColor = StudioSurfaceVariant,
-                    contentColor = StudioSecondary,
-                    elevation = FloatingActionButtonDefaults.elevation(6.dp),
+                    containerColor = StudioSurface,
+                    contentColor = StudioPrimaryVariant,
+                    elevation = FloatingActionButtonDefaults.elevation(3.dp),
                     shape = RoundedCornerShape(16.dp),
-                    modifier = Modifier.testTag("fab_new_batch")
+                    modifier = Modifier
+                        .border(1.dp, StudioCardBorder, RoundedCornerShape(16.dp))
+                        .testTag("fab_new_batch")
                 ) {
                     Icon(Icons.Default.Layers, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(8.dp))
@@ -108,7 +111,7 @@ fun HomeScreen(
                     onClick = onNewQuote,
                     containerColor = StudioPrimary,
                     contentColor = Color.White,
-                    elevation = FloatingActionButtonDefaults.elevation(8.dp),
+                    elevation = FloatingActionButtonDefaults.elevation(6.dp),
                     shape = RoundedCornerShape(18.dp),
                     modifier = Modifier.testTag("fab_new_quote")
                 ) {
@@ -118,7 +121,7 @@ fun HomeScreen(
                 }
             }
         },
-        containerColor = StudioDarkBg
+        containerColor = StudioAppBg
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -132,7 +135,7 @@ fun HomeScreen(
                 Card(
                     shape = RoundedCornerShape(20.dp),
                     colors = CardDefaults.cardColors(containerColor = StudioSurface),
-                    border = CardDefaults.outlinedCardBorder().copy(brush = Brush.linearGradient(listOf(StudioPrimary.copy(alpha = 0.3f), Color.Transparent))),
+                    border = BorderStroke(1.dp, StudioCardBorder),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Box(
@@ -141,8 +144,8 @@ fun HomeScreen(
                             .background(
                                 Brush.linearGradient(
                                     listOf(
-                                        StudioSurfaceVariant.copy(alpha = 0.8f),
-                                        StudioDarkBg.copy(alpha = 0.9f)
+                                        StudioGreenTint,
+                                        StudioSurface
                                     )
                                 )
                             )
@@ -160,23 +163,23 @@ fun HomeScreen(
                                     text = "CREATIVE STUDIO",
                                     fontSize = 10.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = StudioPrimary,
+                                    color = StudioPrimaryVariant,
                                     letterSpacing = 1.sp
                                 )
                             }
 
                             Text(
-                                text = "CapCut for quotes.\nDesign from scratch.",
+                                text = "Design from scratch.\nPixel-perfect quotes.",
                                 style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White,
+                                color = StudioTextPrimary,
                                 lineHeight = 28.sp
                             )
 
                             Text(
                                 text = "No rigid templates. Complete manual control over typography, spacing, subtle watermark chips, and multi-quote batch exports.",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = Color.White.copy(alpha = 0.65f),
+                                color = StudioTextSecondary,
                                 lineHeight = 18.sp
                             )
 
@@ -197,8 +200,8 @@ fun HomeScreen(
                                 OutlinedButton(
                                     onClick = onNewBatch,
                                     shape = RoundedCornerShape(12.dp),
-                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = StudioSecondary),
-                                    border = ButtonDefaults.outlinedButtonBorder.copy(brush = Brush.linearGradient(listOf(StudioSecondary, StudioPrimary))),
+                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = StudioPrimaryVariant),
+                                    border = BorderStroke(1.dp, StudioPrimary),
                                     modifier = Modifier.weight(1f)
                                 ) {
                                     Icon(Icons.Default.Layers, contentDescription = null, modifier = Modifier.size(16.dp))
@@ -215,7 +218,8 @@ fun HomeScreen(
             if (savedQuotes.isEmpty()) {
                 item {
                     Card(
-                        colors = CardDefaults.cardColors(containerColor = StudioSurface.copy(alpha = 0.6f)),
+                        colors = CardDefaults.cardColors(containerColor = StudioSurface),
+                        border = BorderStroke(1.dp, StudioCardBorder),
                         shape = RoundedCornerShape(16.dp),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -249,7 +253,7 @@ fun HomeScreen(
                                 text = "Your Canvas is Clean",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = StudioTextPrimary
                             )
 
                             Spacer(modifier = Modifier.height(4.dp))
@@ -257,7 +261,7 @@ fun HomeScreen(
                             Text(
                                 text = "Tap \"New Quote\" to design a quote card from scratch with custom fonts, gradient angles, and export HD images.",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = Color.White.copy(alpha = 0.6f),
+                                color = StudioTextSecondary,
                                 textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                                 lineHeight = 18.sp
                             )
@@ -275,7 +279,7 @@ fun HomeScreen(
                             text = "Recent Creations ($savedCount)",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = StudioTextPrimary
                         )
                     }
                 }
@@ -290,6 +294,7 @@ fun HomeScreen(
                             Card(
                                 shape = RoundedCornerShape(16.dp),
                                 colors = CardDefaults.cardColors(containerColor = StudioSurface),
+                                border = BorderStroke(1.dp, StudioCardBorder),
                                 modifier = Modifier
                                     .width(170.dp)
                                     .clickable { onOpenExport(spec) }
@@ -305,7 +310,7 @@ fun HomeScreen(
                                     Text(
                                         text = entity.text,
                                         fontSize = 11.sp,
-                                        color = Color.White,
+                                        color = StudioTextPrimary,
                                         maxLines = 2,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -322,7 +327,7 @@ fun HomeScreen(
                     text = "Studio Capabilities",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = StudioTextPrimary
                 )
             }
 
@@ -368,7 +373,8 @@ private fun FeatureCard(
 ) {
     Card(
         shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = StudioSurfaceVariant.copy(alpha = 0.5f)),
+        colors = CardDefaults.cardColors(containerColor = StudioSurface),
+        border = BorderStroke(1.dp, StudioCardBorder),
         modifier = modifier
     ) {
         Column(
@@ -376,8 +382,8 @@ private fun FeatureCard(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(icon, contentDescription = null, tint = StudioPrimary, modifier = Modifier.size(20.dp))
-            Text(text = title, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color.White)
-            Text(text = desc, fontSize = 10.sp, color = Color.White.copy(alpha = 0.6f), lineHeight = 14.sp)
+            Text(text = title, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = StudioTextPrimary)
+            Text(text = desc, fontSize = 10.sp, color = StudioTextSecondary, lineHeight = 14.sp)
         }
     }
 }

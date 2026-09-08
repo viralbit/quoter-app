@@ -1,5 +1,6 @@
 package com.example.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -22,10 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.model.QuoteCardSpec
 import com.example.ui.components.*
-import com.example.ui.theme.StudioDarkBg
-import com.example.ui.theme.StudioPrimary
-import com.example.ui.theme.StudioSurface
-import com.example.ui.theme.StudioSurfaceVariant
+import com.example.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,10 +75,10 @@ fun EditorScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Quote Studio",
+                        text = "Quote Gen",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
-                        color = Color.White
+                        color = StudioTextPrimary
                     )
                 },
                 navigationIcon = {
@@ -91,7 +89,7 @@ fun EditorScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = Color.White
+                            tint = StudioTextPrimary
                         )
                     }
                 },
@@ -105,7 +103,7 @@ fun EditorScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Undo,
                             contentDescription = "Undo",
-                            tint = if (undoStack.isNotEmpty()) Color.White else Color.White.copy(alpha = 0.3f)
+                            tint = if (undoStack.isNotEmpty()) StudioTextPrimary else StudioTextMuted.copy(alpha = 0.4f)
                         )
                     }
                     // Redo Button
@@ -117,7 +115,7 @@ fun EditorScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Redo,
                             contentDescription = "Redo",
-                            tint = if (redoStack.isNotEmpty()) Color.White else Color.White.copy(alpha = 0.3f)
+                            tint = if (redoStack.isNotEmpty()) StudioTextPrimary else StudioTextMuted.copy(alpha = 0.4f)
                         )
                     }
                     // Export Action Button
@@ -132,22 +130,24 @@ fun EditorScreen(
                         Icon(
                             imageVector = Icons.Default.IosShare,
                             contentDescription = null,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(16.dp),
+                            tint = Color.White
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = "Export",
                             fontSize = 13.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = StudioDarkBg
+                    containerColor = StudioSurface
                 )
             )
         },
-        containerColor = StudioDarkBg
+        containerColor = StudioAppBg
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -172,7 +172,7 @@ fun EditorScreen(
                 selectedTabIndex = activeTab,
                 containerColor = StudioSurface,
                 contentColor = StudioPrimary,
-                divider = { HorizontalDivider(color = StudioSurfaceVariant) },
+                divider = { HorizontalDivider(color = StudioCardBorder) },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 tabs.forEachIndexed { index, title ->
@@ -182,9 +182,9 @@ fun EditorScreen(
                         text = {
                             Text(
                                 text = title,
-                                fontWeight = if (activeTab == index) FontWeight.Bold else FontWeight.Normal,
+                                fontWeight = if (activeTab == index) FontWeight.Bold else FontWeight.Medium,
                                 fontSize = 13.sp,
-                                color = if (activeTab == index) StudioPrimary else Color.White.copy(alpha = 0.7f)
+                                color = if (activeTab == index) StudioPrimaryVariant else StudioTextMuted
                             )
                         },
                         modifier = Modifier.testTag("tab_$title")
@@ -225,11 +225,14 @@ fun EditorScreen(
                                 },
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedBorderColor = StudioPrimary,
-                                    unfocusedBorderColor = StudioSurfaceVariant,
-                                    focusedTextColor = Color.White,
-                                    unfocusedTextColor = Color.White,
-                                    focusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.5f),
-                                    unfocusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.5f)
+                                    unfocusedBorderColor = StudioCardBorder,
+                                    focusedTextColor = StudioTextPrimary,
+                                    unfocusedTextColor = StudioTextPrimary,
+                                    focusedLabelColor = StudioPrimaryVariant,
+                                    unfocusedLabelColor = StudioTextSecondary,
+                                    cursorColor = StudioPrimary,
+                                    focusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f),
+                                    unfocusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f)
                                 ),
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -240,7 +243,7 @@ fun EditorScreen(
                             Text(
                                 text = "Quick Inspirations",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = Color.White.copy(alpha = 0.6f)
+                                color = StudioTextSecondary
                             )
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -264,13 +267,13 @@ fun EditorScreen(
                                             Text(
                                                 text = chipLabel,
                                                 fontSize = 11.sp,
-                                                color = Color.White.copy(alpha = 0.8f)
+                                                color = StudioTextPrimary
                                             )
                                         },
                                         colors = AssistChipDefaults.assistChipColors(
                                             containerColor = StudioSurfaceVariant
                                         ),
-                                        border = null
+                                        border = BorderStroke(1.dp, StudioCardBorder)
                                     )
                                 }
                             }

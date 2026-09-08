@@ -22,6 +22,6 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "Quote Studio"
+rootProject.name = "Quote Gen"
 
 include(":app")

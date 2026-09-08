@@ -27,9 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.model.QuoteCardSpec
 import com.example.data.model.StudioPresets
-import com.example.ui.theme.StudioCardBorder
-import com.example.ui.theme.StudioPrimary
-import com.example.ui.theme.StudioSurfaceVariant
+import com.example.ui.theme.*
 
 @Composable
 fun BackgroundControls(
@@ -63,6 +61,7 @@ fun BackgroundControls(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
                 .background(StudioSurfaceVariant)
+                .border(1.dp, StudioCardBorder, RoundedCornerShape(12.dp))
                 .padding(4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
@@ -87,7 +86,7 @@ fun BackgroundControls(
                         },
                         fontSize = 13.sp,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        color = if (isSelected) Color.White else Color.White.copy(alpha = 0.7f)
+                        color = if (isSelected) Color.White else StudioTextPrimary
                     )
                 }
             }
@@ -101,8 +100,8 @@ fun BackgroundControls(
                     Text(
                         text = "Gradient Presets",
                         style = MaterialTheme.typography.labelLarge,
-                        color = Color.White.copy(alpha = 0.8f),
-                        fontWeight = FontWeight.SemiBold
+                        color = StudioTextPrimary,
+                        fontWeight = FontWeight.Bold
                     )
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -121,7 +120,7 @@ fun BackgroundControls(
                                         )
                                     )
                                     .border(
-                                        width = if (isSelected) 2.dp else 1.dp,
+                                        width = if (isSelected) 2.5.dp else 1.dp,
                                         color = if (isSelected) StudioPrimary else StudioCardBorder,
                                         shape = RoundedCornerShape(10.dp)
                                     )
@@ -157,13 +156,13 @@ fun BackgroundControls(
                         Text(
                             text = "Gradient Angle",
                             style = MaterialTheme.typography.labelLarge,
-                            color = Color.White.copy(alpha = 0.8f),
-                            fontWeight = FontWeight.SemiBold
+                            color = StudioTextPrimary,
+                            fontWeight = FontWeight.Bold
                         )
                         Text(
                             text = "${spec.gradientAngle.toInt()}°",
                             style = MaterialTheme.typography.labelMedium,
-                            color = StudioPrimary,
+                            color = StudioPrimaryVariant,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -192,7 +191,7 @@ fun BackgroundControls(
                                     text = "${angle.toInt()}°",
                                     fontSize = 11.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                    color = Color.White
+                                    color = if (isSelected) Color.White else StudioTextPrimary
                                 )
                             }
                         }
@@ -205,8 +204,8 @@ fun BackgroundControls(
                     Text(
                         text = "Solid Palette",
                         style = MaterialTheme.typography.labelLarge,
-                        color = Color.White.copy(alpha = 0.8f),
-                        fontWeight = FontWeight.SemiBold
+                        color = StudioTextPrimary,
+                        fontWeight = FontWeight.Bold
                     )
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -221,7 +220,7 @@ fun BackgroundControls(
                                     .background(Color(colorLong))
                                     .border(
                                         width = if (isSelected) 3.dp else 1.dp,
-                                        color = if (isSelected) StudioPrimary else Color.White.copy(alpha = 0.2f),
+                                        color = if (isSelected) StudioPrimary else StudioCardBorder,
                                         shape = CircleShape
                                     )
                                     .clickable { onSpecChange(spec.copy(bgColor1 = colorLong)) }
@@ -251,9 +250,9 @@ fun BackgroundControls(
                                 .height(44.dp)
                                 .testTag("pick_photo_button")
                         ) {
-                            Icon(Icons.Default.AddPhotoAlternate, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Icon(Icons.Default.AddPhotoAlternate, contentDescription = null, modifier = Modifier.size(18.dp), tint = Color.White)
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Select Photo", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                            Text("Select Photo", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
                         }
 
                         if (spec.photoUri != null) {
@@ -267,7 +266,7 @@ fun BackgroundControls(
                                     )
                                 },
                                 shape = RoundedCornerShape(12.dp),
-                                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red.copy(alpha = 0.8f)),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFD32F2F)),
                                 modifier = Modifier.height(44.dp)
                             ) {
                                 Icon(Icons.Default.Delete, contentDescription = null, modifier = Modifier.size(18.dp))
@@ -286,12 +285,13 @@ fun BackgroundControls(
                                 Text(
                                     text = "Photo Zoom",
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = Color.White.copy(alpha = 0.7f)
+                                    color = StudioTextSecondary
                                 )
                                 Text(
                                     text = "${String.format("%.1f", spec.photoScale)}x",
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = StudioPrimary
+                                    color = StudioPrimaryVariant,
+                                    fontWeight = FontWeight.Bold
                                 )
                             }
                             StudioSlider(

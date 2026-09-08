@@ -1,6 +1,7 @@
 package com.example.ui.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -29,11 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.example.data.local.SettingsPreferences
 import com.example.data.model.StudioPresets
 import com.example.ui.components.StudioSlider
-import com.example.ui.theme.StudioCardBorder
-import com.example.ui.theme.StudioDarkBg
-import com.example.ui.theme.StudioPrimary
-import com.example.ui.theme.StudioSurface
-import com.example.ui.theme.StudioSurfaceVariant
+import com.example.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,7 +62,7 @@ fun SettingsScreen(
                         text = "Studio Settings",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
-                        color = Color.White
+                        color = StudioTextPrimary
                     )
                 },
                 actions = {
@@ -76,10 +73,10 @@ fun SettingsScreen(
                         Icon(Icons.Default.Save, contentDescription = "Save", tint = StudioPrimary)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = StudioDarkBg)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = StudioSurface)
             )
         },
-        containerColor = StudioDarkBg
+        containerColor = StudioAppBg
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -92,6 +89,7 @@ fun SettingsScreen(
             // 1. WATERMARK CONFIGURATION
             Card(
                 colors = CardDefaults.cardColors(containerColor = StudioSurface),
+                border = BorderStroke(1.dp, StudioCardBorder),
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -103,7 +101,7 @@ fun SettingsScreen(
                         text = "Default Watermark",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = StudioTextPrimary
                     )
 
                     Row(
@@ -115,12 +113,12 @@ fun SettingsScreen(
                             Text(
                                 text = "Enable Watermark by Default",
                                 fontSize = 14.sp,
-                                color = Color.White
+                                color = StudioTextPrimary
                             )
                             Text(
                                 text = "Apply gradient badge to new cards",
                                 fontSize = 12.sp,
-                                color = Color.White.copy(alpha = 0.6f)
+                                color = StudioTextSecondary
                             )
                         }
                         Switch(
@@ -129,6 +127,7 @@ fun SettingsScreen(
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = Color.White,
                                 checkedTrackColor = StudioPrimary,
+                                uncheckedThumbColor = StudioTextMuted,
                                 uncheckedTrackColor = StudioSurfaceVariant
                             )
                         )
@@ -144,8 +143,13 @@ fun SettingsScreen(
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = StudioPrimary,
                             unfocusedBorderColor = StudioCardBorder,
-                            focusedTextColor = Color.White,
-                            unfocusedTextColor = Color.White
+                            focusedTextColor = StudioTextPrimary,
+                            unfocusedTextColor = StudioTextPrimary,
+                            focusedLabelColor = StudioPrimaryVariant,
+                            unfocusedLabelColor = StudioTextSecondary,
+                            cursorColor = StudioPrimary,
+                            focusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f),
+                            unfocusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f)
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -157,6 +161,7 @@ fun SettingsScreen(
             // 2. DEFAULT TYPOGRAPHY & FONT
             Card(
                 colors = CardDefaults.cardColors(containerColor = StudioSurface),
+                border = BorderStroke(1.dp, StudioCardBorder),
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -168,13 +173,13 @@ fun SettingsScreen(
                         text = "Default Typography",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = StudioTextPrimary
                     )
 
                     Text(
                         text = "Font Family",
                         fontSize = 13.sp,
-                        color = Color.White.copy(alpha = 0.8f)
+                        color = StudioTextSecondary
                     )
 
                     LazyRow(
@@ -188,12 +193,13 @@ fun SettingsScreen(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(10.dp))
                                     .background(if (isSelected) StudioPrimary else StudioSurfaceVariant)
+                                    .border(1.dp, if (isSelected) StudioPrimary else StudioCardBorder, RoundedCornerShape(10.dp))
                                     .clickable { fontFamily = font }
                                     .padding(horizontal = 12.dp, vertical = 8.dp)
                             ) {
                                 Text(
                                     text = font,
-                                    color = Color.White,
+                                    color = if (isSelected) Color.White else StudioTextPrimary,
                                     fontSize = 12.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                                 )
@@ -208,13 +214,13 @@ fun SettingsScreen(
                         Text(
                             text = "Default Font Size",
                             fontSize = 13.sp,
-                            color = Color.White.copy(alpha = 0.8f)
+                            color = StudioTextSecondary
                         )
                         Text(
                             text = "${fontSize.toInt()} sp",
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
-                            color = StudioPrimary
+                            color = StudioPrimaryVariant
                         )
                     }
 
@@ -228,7 +234,7 @@ fun SettingsScreen(
                     Text(
                         text = "Default Text Color",
                         fontSize = 13.sp,
-                        color = Color.White.copy(alpha = 0.8f)
+                        color = StudioTextSecondary
                     )
 
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -241,7 +247,7 @@ fun SettingsScreen(
                                     .background(Color(colorVal))
                                     .border(
                                         width = if (isSelected) 3.dp else 1.dp,
-                                        color = if (isSelected) StudioPrimary else Color.White.copy(alpha = 0.2f),
+                                        color = if (isSelected) StudioPrimary else StudioCardBorder,
                                         shape = CircleShape
                                     )
                                     .clickable { textColor = colorVal }
@@ -254,6 +260,7 @@ fun SettingsScreen(
             // 3. APP INFO
             Card(
                 colors = CardDefaults.cardColors(containerColor = StudioSurface),
+                border = BorderStroke(1.dp, StudioCardBorder),
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -267,44 +274,44 @@ fun SettingsScreen(
                     ) {
                         Icon(Icons.Default.Info, contentDescription = null, tint = StudioPrimary)
                         Text(
-                            text = "About Quote Studio",
+                            text = "About Quote Gen",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = StudioTextPrimary
                         )
                     }
 
                     Text(
-                        text = "Quote Studio is a lightweight, CapCut-style blank canvas editor crafted for creators. It gives you 100% design freedom to craft, batch, and export high-resolution quote cards without cookie-cutter templates.",
+                        text = "Quote Gen is a lightweight canvas editor crafted for creators. It gives you 100% design freedom to craft, batch, and export high-resolution quote cards without cookie-cutter templates.",
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.7f),
+                        color = StudioTextSecondary,
                         lineHeight = 18.sp
                     )
 
-                    HorizontalDivider(color = StudioSurfaceVariant, modifier = Modifier.padding(vertical = 4.dp))
+                    HorizontalDivider(color = StudioCardBorder, modifier = Modifier.padding(vertical = 4.dp))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "App Version", fontSize = 12.sp, color = Color.White.copy(alpha = 0.6f))
-                        Text(text = "1.0.0", fontSize = 12.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                        Text(text = "App Version", fontSize = 12.sp, color = StudioTextSecondary)
+                        Text(text = "1.0.0", fontSize = 12.sp, color = StudioTextPrimary, fontWeight = FontWeight.Bold)
                     }
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "Package", fontSize = 12.sp, color = Color.White.copy(alpha = 0.6f))
-                        Text(text = "com.viralbit.quotestudio", fontSize = 12.sp, color = StudioPrimary)
+                        Text(text = "Package", fontSize = 12.sp, color = StudioTextSecondary)
+                        Text(text = "com.aistudio.quotegen.rfwq", fontSize = 12.sp, color = StudioPrimaryVariant, fontWeight = FontWeight.SemiBold)
                     }
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "Architecture", fontSize = 12.sp, color = Color.White.copy(alpha = 0.6f))
-                        Text(text = "100% Offline & Private", fontSize = 12.sp, color = Color.White.copy(alpha = 0.8f))
+                        Text(text = "Architecture", fontSize = 12.sp, color = StudioTextSecondary)
+                        Text(text = "100% Offline & Private", fontSize = 12.sp, color = StudioTextPrimary)
                     }
                 }
             }
@@ -318,7 +325,7 @@ fun SettingsScreen(
                     .fillMaxWidth()
                     .height(48.dp)
             ) {
-                Text(text = "Save Settings as Defaults", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                Text(text = "Save Settings as Defaults", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.White)
             }
 
             Spacer(modifier = Modifier.height(40.dp))

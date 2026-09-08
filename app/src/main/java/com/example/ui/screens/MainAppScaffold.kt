@@ -15,10 +15,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.example.data.model.QuoteCardSpec
 import com.example.data.repository.QuoteRepository
-import com.example.ui.theme.StudioDarkBg
-import com.example.ui.theme.StudioPrimary
-import com.example.ui.theme.StudioSurface
-import com.example.ui.theme.StudioSurfaceVariant
+import com.example.ui.theme.*
 
 sealed class ScreenDestination {
     object MainTabs : ScreenDestination()
@@ -40,8 +37,8 @@ fun MainAppScaffold(
                 bottomBar = {
                     NavigationBar(
                         containerColor = StudioSurface,
-                        contentColor = Color.White,
-                        tonalElevation = 8.dp,
+                        contentColor = StudioTextPrimary,
+                        tonalElevation = 4.dp,
                         modifier = Modifier.testTag("bottom_navigation_bar")
                     ) {
                         NavigationBarItem(
@@ -51,10 +48,10 @@ fun MainAppScaffold(
                             label = { Text("Home") },
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = Color.White,
-                                selectedTextColor = StudioPrimary,
+                                selectedTextColor = StudioPrimaryVariant,
                                 indicatorColor = StudioPrimary,
-                                unselectedIconColor = Color.White.copy(alpha = 0.5f),
-                                unselectedTextColor = Color.White.copy(alpha = 0.5f)
+                                unselectedIconColor = StudioTextMuted,
+                                unselectedTextColor = StudioTextMuted
                             ),
                             modifier = Modifier.testTag("tab_nav_home")
                         )
@@ -66,10 +63,10 @@ fun MainAppScaffold(
                             label = { Text("Saved") },
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = Color.White,
-                                selectedTextColor = StudioPrimary,
+                                selectedTextColor = StudioPrimaryVariant,
                                 indicatorColor = StudioPrimary,
-                                unselectedIconColor = Color.White.copy(alpha = 0.5f),
-                                unselectedTextColor = Color.White.copy(alpha = 0.5f)
+                                unselectedIconColor = StudioTextMuted,
+                                unselectedTextColor = StudioTextMuted
                             ),
                             modifier = Modifier.testTag("tab_nav_saved")
                         )
@@ -81,16 +78,16 @@ fun MainAppScaffold(
                             label = { Text("Settings") },
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = Color.White,
-                                selectedTextColor = StudioPrimary,
+                                selectedTextColor = StudioPrimaryVariant,
                                 indicatorColor = StudioPrimary,
-                                unselectedIconColor = Color.White.copy(alpha = 0.5f),
-                                unselectedTextColor = Color.White.copy(alpha = 0.5f)
+                                unselectedIconColor = StudioTextMuted,
+                                unselectedTextColor = StudioTextMuted
                             ),
                             modifier = Modifier.testTag("tab_nav_settings")
                         )
                     }
                 },
-                containerColor = StudioDarkBg
+                containerColor = StudioAppBg
             ) { innerPadding ->
                 AnimatedContent(
                     targetState = selectedTab,

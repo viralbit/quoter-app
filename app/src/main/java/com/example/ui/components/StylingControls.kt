@@ -1,5 +1,6 @@
 package com.example.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,10 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.model.QuoteCardSpec
 import com.example.data.model.StudioPresets
-import com.example.ui.theme.StudioCardBorder
-import com.example.ui.theme.StudioPrimary
-import com.example.ui.theme.StudioSecondary
-import com.example.ui.theme.StudioSurfaceVariant
+import com.example.ui.theme.*
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -61,13 +59,13 @@ fun StylingControls(
                 Text(
                     text = "Font Family",
                     style = MaterialTheme.typography.labelLarge,
-                    color = Color.White.copy(alpha = 0.85f),
+                    color = StudioTextPrimary,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = "${StudioPresets.fontFamilies.size} Styles",
                     fontSize = 11.sp,
-                    color = StudioSecondary,
+                    color = StudioPrimaryVariant,
                     fontWeight = FontWeight.SemiBold
                 )
             }
@@ -106,7 +104,7 @@ fun StylingControls(
                                 text = font,
                                 fontFamily = previewFontFamily,
                                 fontWeight = FontWeight.Bold,
-                                color = if (isSelected) Color.White else Color.White.copy(alpha = 0.9f),
+                                color = if (isSelected) Color.White else StudioTextPrimary,
                                 fontSize = 13.sp
                             )
                         }
@@ -190,13 +188,14 @@ fun StylingControls(
                 Text(
                     text = "Alignment",
                     style = MaterialTheme.typography.labelLarge,
-                    color = Color.White.copy(alpha = 0.85f),
+                    color = StudioTextPrimary,
                     fontWeight = FontWeight.Bold
                 )
                 Row(
                     modifier = Modifier
                         .clip(RoundedCornerShape(12.dp))
                         .background(StudioSurfaceVariant)
+                        .border(1.dp, StudioCardBorder, RoundedCornerShape(12.dp))
                         .padding(4.dp),
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
@@ -219,7 +218,7 @@ fun StylingControls(
                             Icon(
                                 imageVector = icon,
                                 contentDescription = alignName,
-                                tint = if (isSelected) Color.White else Color.White.copy(alpha = 0.6f),
+                                tint = if (isSelected) Color.White else StudioTextMuted,
                                 modifier = Modifier.size(18.dp)
                             )
                         }
@@ -232,13 +231,14 @@ fun StylingControls(
                 Text(
                     text = "Weight",
                     style = MaterialTheme.typography.labelLarge,
-                    color = Color.White.copy(alpha = 0.85f),
+                    color = StudioTextPrimary,
                     fontWeight = FontWeight.Bold
                 )
                 Row(
                     modifier = Modifier
                         .clip(RoundedCornerShape(12.dp))
                         .background(StudioSurfaceVariant)
+                        .border(1.dp, StudioCardBorder, RoundedCornerShape(12.dp))
                         .padding(4.dp),
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
@@ -263,7 +263,7 @@ fun StylingControls(
                                 text = label,
                                 fontSize = 12.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                color = if (isSelected) Color.White else Color.White.copy(alpha = 0.7f)
+                                color = if (isSelected) Color.White else StudioTextPrimary
                             )
                         }
                     }
@@ -276,7 +276,7 @@ fun StylingControls(
             Text(
                 text = "Text Color",
                 style = MaterialTheme.typography.labelLarge,
-                color = Color.White.copy(alpha = 0.85f),
+                color = StudioTextPrimary,
                 fontWeight = FontWeight.Bold
             )
             LazyRow(
@@ -292,7 +292,7 @@ fun StylingControls(
                             .background(Color(colorLong))
                             .border(
                                 width = if (isSelected) 3.dp else 1.dp,
-                                color = if (isSelected) StudioPrimary else Color.White.copy(alpha = 0.2f),
+                                color = if (isSelected) StudioPrimary else StudioCardBorder,
                                 shape = CircleShape
                             )
                             .clickable { onSpecChange(spec.copy(textColor = colorLong)) }
@@ -328,8 +328,8 @@ fun AlightStyleScrubber(
 ) {
     Card(
         shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = StudioSurfaceVariant.copy(alpha = 0.45f)),
-        border = CardDefaults.outlinedCardBorder().copy(brush = androidx.compose.ui.graphics.SolidColor(StudioCardBorder.copy(alpha = 0.5f))),
+        colors = CardDefaults.cardColors(containerColor = StudioSurface),
+        border = BorderStroke(1.dp, StudioCardBorder),
         modifier = modifier
             .fillMaxWidth()
             .testTag(testTag)
@@ -361,7 +361,7 @@ fun AlightStyleScrubber(
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.8.sp,
-                        color = Color.White.copy(alpha = 0.75f)
+                        color = StudioTextPrimary
                     )
                 }
 
@@ -388,15 +388,15 @@ fun AlightStyleScrubber(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(6.dp))
-                            .background(StudioPrimary.copy(alpha = 0.18f))
-                            .border(1.dp, StudioPrimary.copy(alpha = 0.4f), RoundedCornerShape(6.dp))
+                            .background(StudioGreenTint)
+                            .border(1.dp, StudioCardBorder, RoundedCornerShape(6.dp))
                             .padding(horizontal = 8.dp, vertical = 3.dp)
                     ) {
                         Text(
                             text = formatDisplay(value),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.ExtraBold,
-                            color = StudioPrimary,
+                            color = StudioPrimaryVariant,
                             letterSpacing = 0.5.sp
                         )
                     }
@@ -419,10 +419,11 @@ fun AlightStyleScrubber(
                         .size(32.dp)
                         .clip(CircleShape)
                         .background(StudioSurfaceVariant)
+                        .border(1.dp, StudioCardBorder, CircleShape)
                 ) {
                     Text(
                         text = "−",
-                        color = Color.White,
+                        color = StudioTextPrimary,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -456,10 +457,10 @@ fun AlightStyleScrubber(
                             val x = (w / tickCount) * i
                             val isMajor = i % 5 == 0
                             val tickH = if (isMajor) h else h * 0.45f
-                            val tickAlpha = if (isMajor) 0.55f else 0.25f
+                            val tickAlpha = if (isMajor) 0.6f else 0.25f
 
                             drawLine(
-                                color = Color.White.copy(alpha = tickAlpha),
+                                color = StudioCardBorder.copy(alpha = tickAlpha),
                                 start = Offset(x, h - tickH),
                                 end = Offset(x, h),
                                 strokeWidth = if (isMajor) 1.5.dp.toPx() else 1.dp.toPx()
@@ -478,10 +479,11 @@ fun AlightStyleScrubber(
                         .size(32.dp)
                         .clip(CircleShape)
                         .background(StudioSurfaceVariant)
+                        .border(1.dp, StudioCardBorder, CircleShape)
                 ) {
                     Text(
                         text = "+",
-                        color = Color.White,
+                        color = StudioTextPrimary,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -502,7 +504,7 @@ fun AlightStyleScrubber(
                             .background(if (isSelected) StudioPrimary else StudioSurfaceVariant)
                             .border(
                                 width = 1.dp,
-                                color = if (isSelected) StudioPrimary else Color.Transparent,
+                                color = if (isSelected) StudioPrimary else StudioCardBorder,
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .clickable { onValueChange(presetVal) }
@@ -512,7 +514,7 @@ fun AlightStyleScrubber(
                             text = label,
                             fontSize = 11.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                            color = if (isSelected) Color.White else Color.White.copy(alpha = 0.75f)
+                            color = if (isSelected) Color.White else StudioTextPrimary
                         )
                     }
                 }
