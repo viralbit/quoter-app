@@ -132,6 +132,7 @@ fun MainAppScaffold(
         is ScreenDestination.Editor -> {
             EditorScreen(
                 initialSpec = dest.initialSpec,
+                settings = repository.settings,
                 onNavigateBack = { currentDestination = ScreenDestination.MainTabs },
                 onNavigateToExport = { updatedSpec ->
                     currentDestination = ScreenDestination.Export(updatedSpec)

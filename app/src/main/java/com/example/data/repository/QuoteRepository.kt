@@ -36,7 +36,16 @@ class QuoteRepository(
             bgColor1 = settings.defaultBgColor1,
             bgColor2 = settings.defaultBgColor2,
             showWatermark = settings.defaultWatermarkEnabled,
-            watermarkHandle = settings.defaultWatermarkHandle
+            watermarkHandle = settings.defaultWatermarkHandle,
+            watermarkPosition = settings.defaultWatermarkPosition,
+            watermarkOpacity = settings.defaultWatermarkOpacity,
+            watermarkPaddingHorizontal = settings.defaultWatermarkPaddingH,
+            watermarkPaddingVertical = settings.defaultWatermarkPaddingV,
+            watermarkCornerRadius = settings.defaultWatermarkCornerRadius,
+            watermarkBgColor = settings.defaultWatermarkBgColor,
+            watermarkTextSizeSp = settings.defaultWatermarkTextSize,
+            watermarkTextColor = settings.defaultWatermarkTextColor,
+            watermarkMargin = settings.defaultWatermarkMargin
         )
     }
 }

@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.example.data.local.SettingsPreferences
 import com.example.data.model.StudioPresets
 import com.example.ui.components.StudioSlider
+import com.example.ui.components.WatermarkChip
 import com.example.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,6 +45,15 @@ fun SettingsScreen(
     var textColor by remember { mutableLongStateOf(settings.defaultTextColor) }
     var watermarkEnabled by remember { mutableStateOf(settings.defaultWatermarkEnabled) }
     var watermarkHandle by remember { mutableStateOf(settings.defaultWatermarkHandle) }
+    var watermarkPosition by remember { mutableStateOf(settings.defaultWatermarkPosition) }
+    var watermarkOpacity by remember { mutableFloatStateOf(settings.defaultWatermarkOpacity) }
+    var watermarkPaddingH by remember { mutableFloatStateOf(settings.defaultWatermarkPaddingH) }
+    var watermarkPaddingV by remember { mutableFloatStateOf(settings.defaultWatermarkPaddingV) }
+    var watermarkCornerRadius by remember { mutableFloatStateOf(settings.defaultWatermarkCornerRadius) }
+    var watermarkBgColor by remember { mutableLongStateOf(settings.defaultWatermarkBgColor) }
+    var watermarkTextSize by remember { mutableFloatStateOf(settings.defaultWatermarkTextSize) }
+    var watermarkTextColor by remember { mutableLongStateOf(settings.defaultWatermarkTextColor) }
+    var watermarkMargin by remember { mutableFloatStateOf(settings.defaultWatermarkMargin) }
 
     fun saveSettings() {
         settings.defaultFontFamily = fontFamily
@@ -51,6 +61,15 @@ fun SettingsScreen(
         settings.defaultTextColor = textColor
         settings.defaultWatermarkEnabled = watermarkEnabled
         settings.defaultWatermarkHandle = watermarkHandle
+        settings.defaultWatermarkPosition = watermarkPosition
+        settings.defaultWatermarkOpacity = watermarkOpacity
+        settings.defaultWatermarkPaddingH = watermarkPaddingH
+        settings.defaultWatermarkPaddingV = watermarkPaddingV
+        settings.defaultWatermarkCornerRadius = watermarkCornerRadius
+        settings.defaultWatermarkBgColor = watermarkBgColor
+        settings.defaultWatermarkTextSize = watermarkTextSize
+        settings.defaultWatermarkTextColor = watermarkTextColor
+        settings.defaultWatermarkMargin = watermarkMargin
         Toast.makeText(context, "Settings saved as defaults! ✨", Toast.LENGTH_SHORT).show()
     }
 
@@ -155,6 +174,66 @@ fun SettingsScreen(
                             .fillMaxWidth()
                             .testTag("settings_handle_input")
                     )
+
+                    // Live Pill Preview
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(StudioSurfaceVariant)
+                            .border(1.dp, StudioCardBorder, RoundedCornerShape(12.dp))
+                            .padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Default Pill Preview",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = StudioTextSecondary
+                        )
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(56.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(StudioSurface),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            WatermarkChip(
+                                handle = if (watermarkHandle.isBlank()) "@yourhandle" else watermarkHandle,
+                                bgColor = Color(watermarkBgColor),
+                                bgOpacity = watermarkOpacity,
+                                textColor = Color(watermarkTextColor),
+                                textSizeSp = watermarkTextSize,
+                                cornerRadiusDp = watermarkCornerRadius,
+                                horizontalPaddingDp = watermarkPaddingH,
+                                verticalPaddingDp = watermarkPaddingV
+                            )
+                        }
+
+                        Text(
+                            text = "Position: $watermarkPosition • Opacity: ${(watermarkOpacity * 100).toInt()}% • Margin: ${watermarkMargin.toInt()}dp",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = StudioTextSecondary
+                        )
+
+                        TextButton(
+                            onClick = {
+                                watermarkPosition = "BOTTOM_RIGHT"
+                                watermarkOpacity = 1.0f
+                                watermarkPaddingH = 14f
+                                watermarkPaddingV = 6f
+                                watermarkCornerRadius = 8f
+                                watermarkBgColor = 0xFF7E878CL
+                                watermarkTextSize = 12f
+                                watermarkTextColor = 0xFFFFFFFFL
+                                watermarkMargin = 16f
+                            },
+                            modifier = Modifier.align(Alignment.End)
+                        ) {
+                            Text("Reset Pill to Factory Gray", color = StudioPrimary, fontSize = 12.sp)
+                        }
+                    }
                 }
             }
 

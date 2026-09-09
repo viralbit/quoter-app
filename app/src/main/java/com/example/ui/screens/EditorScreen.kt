@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.data.local.SettingsPreferences
 import com.example.data.model.QuoteCardSpec
 import com.example.ui.components.*
 import com.example.ui.theme.*
@@ -30,6 +31,7 @@ import com.example.ui.theme.*
 @Composable
 fun EditorScreen(
     initialSpec: QuoteCardSpec,
+    settings: SettingsPreferences? = null,
     onNavigateBack: () -> Unit,
     onNavigateToExport: (QuoteCardSpec) -> Unit
 ) {
@@ -310,7 +312,10 @@ fun EditorScreen(
                         // WATERMARK CONFIGURATION
                         WatermarkControls(
                             spec = currentSpec,
-                            onSpecChange = { updateSpec(it) }
+                            onSpecChange = { updated ->
+                                updateSpec(updated)
+                                settings?.saveWatermarkStyle(updated)
+                            }
                         )
                     }
                 }

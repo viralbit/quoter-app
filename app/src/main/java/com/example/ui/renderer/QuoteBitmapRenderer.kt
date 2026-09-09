@@ -162,11 +162,16 @@ object QuoteBitmapRenderer {
 
     private fun drawWatermarkChip(canvas: Canvas, spec: QuoteCardSpec, targetSize: Int) {
         val chipText = spec.watermarkHandle
-        val textSize = targetSize * 0.024f
-        val opacity = spec.watermarkOpacity.coerceIn(0.05f, 1.0f)
+        val scaleFactor = targetSize.toFloat() / 360f
+
+        val textSize = spec.watermarkTextSizeSp * scaleFactor
+        val horizontalPadding = spec.watermarkPaddingHorizontal * scaleFactor
+        val verticalPadding = spec.watermarkPaddingVertical * scaleFactor
+        val cornerRadius = spec.watermarkCornerRadius * scaleFactor
+        val margin = spec.watermarkMargin * scaleFactor
 
         val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.argb((255 * opacity).toInt(), 255, 255, 255)
+            color = spec.watermarkTextColor.toInt()
             this.textSize = textSize
             typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL)
             textAlign = Paint.Align.CENTER
@@ -176,31 +181,31 @@ object QuoteBitmapRenderer {
         val textBounds = Rect()
         textPaint.getTextBounds(chipText, 0, chipText.length, textBounds)
 
-        val horizontalPadding = targetSize * 0.028f
-        val verticalPadding = targetSize * 0.014f
         val chipWidth = textBounds.width() + (horizontalPadding * 2f)
         val chipHeight = textBounds.height() + (verticalPadding * 2f)
 
-        val margin = targetSize * 0.055f
-
         val (chipLeft, chipTop) = when (spec.watermarkPosition) {
             "BOTTOM_LEFT" -> Pair(margin, targetSize - margin - chipHeight)
+            "BOTTOM_CENTER" -> Pair((targetSize - chipWidth) / 2f, targetSize - margin - chipHeight)
             "TOP_LEFT" -> Pair(margin, margin)
             "TOP_RIGHT" -> Pair(targetSize - margin - chipWidth, margin)
             else -> Pair(targetSize - margin - chipWidth, targetSize - margin - chipHeight)
         }
 
         val chipRect = RectF(chipLeft, chipTop, chipLeft + chipWidth, chipTop + chipHeight)
-        val cornerRadius = targetSize * 0.012f // rounded corners matching reference image
 
-        // Solid flat gray/muted background (no gradient, no border, no icon)
-        val pillAlpha = (245 * opacity).toInt()
-        val chipPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            color = Color.argb(pillAlpha, 126, 135, 140) // muted slate gray #7E878C
-            style = Paint.Style.FILL
+        val bgAlpha = (255 * spec.watermarkOpacity.coerceIn(0f, 1f)).toInt()
+        if (bgAlpha > 0) {
+            val origBg = spec.watermarkBgColor.toInt()
+            val r = Color.red(origBg)
+            val g = Color.green(origBg)
+            val b = Color.blue(origBg)
+            val chipPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = Color.argb(bgAlpha, r, g, b)
+                style = Paint.Style.FILL
+            }
+            canvas.drawRoundRect(chipRect, cornerRadius, cornerRadius, chipPaint)
         }
-
-        canvas.drawRoundRect(chipRect, cornerRadius, cornerRadius, chipPaint)
 
         // Draw plain text centered inside the pill
         val textX = chipRect.centerX()

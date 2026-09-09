@@ -26,8 +26,15 @@ data class QuoteCardSpec(
     val photoPanY: Float = 0f,
     val showWatermark: Boolean = true,
     val watermarkHandle: String = "Mosh Quotes",
-    val watermarkPosition: String = "BOTTOM_RIGHT", // "BOTTOM_RIGHT", "BOTTOM_LEFT", "TOP_RIGHT", "TOP_LEFT"
-    val watermarkOpacity: Float = 1.0f // 0.1f to 1.0f
+    val watermarkPosition: String = "BOTTOM_RIGHT", // "BOTTOM_RIGHT", "BOTTOM_LEFT", "BOTTOM_CENTER", "TOP_RIGHT", "TOP_LEFT"
+    val watermarkOpacity: Float = 1.0f, // 0.0f to 1.0f (pill background opacity)
+    val watermarkPaddingHorizontal: Float = 14f, // dp
+    val watermarkPaddingVertical: Float = 6f, // dp
+    val watermarkCornerRadius: Float = 8f, // dp
+    val watermarkBgColor: Long = 0xFF7E878CL, // Muted slate gray
+    val watermarkTextSizeSp: Float = 12f, // sp
+    val watermarkTextColor: Long = 0xFFFFFFFFL, // White
+    val watermarkMargin: Float = 16f // dp
 ) {
     fun getComposeFontFamily(): FontFamily {
         return try {
@@ -108,6 +115,29 @@ object StudioPresets {
         0xFFFDE047L, // Pale Yellow
         0xFF67E8F9L, // Light Cyan
         0xFFA78BFAL, // Soft Violet
+        0xFFF472B6L  // Soft Pink
+    )
+
+    val watermarkBgColors = listOf(
+        0xFF7E878CL, // Muted Slate Gray (Default)
+        0xFF1E1E2EL, // Dark Charcoal Pill
+        0xFF121212L, // Pure Pitch Black
+        0xFFD4AF37L, // Gold Accent
+        0xFFFFFFFFL, // Pure White
+        0xFF334155L, // Deep Slate
+        0xFF1E293BL, // Dark Midnight Blue
+        0xFF7F1D1DL, // Muted Crimson
+        0xFF064E3BL  // Forest Green
+    )
+
+    val watermarkTextColors = listOf(
+        0xFFFFFFFFL, // Pure White (Default)
+        0xFFE2E8F0L, // Soft Off-White
+        0xFFD4AF37L, // Luxury Gold
+        0xFF121212L, // Deep Charcoal
+        0xFF94A3B8L, // Cool Slate
+        0xFFF59E0BL, // Warm Amber
+        0xFF38BDF8L, // Ice Blue
         0xFFF472B6L  // Soft Pink
     )
 

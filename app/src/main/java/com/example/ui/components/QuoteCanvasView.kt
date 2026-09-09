@@ -108,24 +108,40 @@ fun QuoteCanvasView(
             )
         }
 
-        // 3. Watermark Chip (Live preview with custom opacity)
+        // 3. Watermark Chip (Live preview with custom styling)
         if (spec.showWatermark && spec.watermarkHandle.isNotBlank()) {
             val alignment = when (spec.watermarkPosition) {
                 "BOTTOM_LEFT" -> Alignment.BottomStart
+                "BOTTOM_CENTER" -> Alignment.BottomCenter
                 "TOP_LEFT" -> Alignment.TopStart
                 "TOP_RIGHT" -> Alignment.TopEnd
                 else -> Alignment.BottomEnd
             }
 
+            val marginDp = spec.watermarkMargin.dp
+            val paddingModifier = when (spec.watermarkPosition) {
+                "BOTTOM_LEFT" -> Modifier.padding(start = marginDp, bottom = marginDp)
+                "BOTTOM_CENTER" -> Modifier.padding(bottom = marginDp)
+                "TOP_LEFT" -> Modifier.padding(start = marginDp, top = marginDp)
+                "TOP_RIGHT" -> Modifier.padding(end = marginDp, top = marginDp)
+                else -> Modifier.padding(end = marginDp, bottom = marginDp)
+            }
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(20.dp),
+                    .then(paddingModifier),
                 contentAlignment = alignment
             ) {
                 WatermarkChip(
                     handle = spec.watermarkHandle,
-                    opacity = spec.watermarkOpacity
+                    bgColor = Color(spec.watermarkBgColor),
+                    bgOpacity = spec.watermarkOpacity,
+                    textColor = Color(spec.watermarkTextColor),
+                    textSizeSp = spec.watermarkTextSizeSp,
+                    cornerRadiusDp = spec.watermarkCornerRadius,
+                    horizontalPaddingDp = spec.watermarkPaddingHorizontal,
+                    verticalPaddingDp = spec.watermarkPaddingVertical
                 )
             }
         }
@@ -160,22 +176,27 @@ private fun GradientBackground(spec: QuoteCardSpec) {
 @Composable
 fun WatermarkChip(
     handle: String,
-    opacity: Float = 1.0f,
+    bgColor: Color = Color(0xFF7E878C),
+    bgOpacity: Float = 1.0f,
+    textColor: Color = Color.White,
+    textSizeSp: Float = 12f,
+    cornerRadiusDp: Float = 8f,
+    horizontalPaddingDp: Float = 14f,
+    verticalPaddingDp: Float = 6f,
     modifier: Modifier = Modifier
 ) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .alpha(opacity.coerceIn(0.05f, 1.0f))
-            .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFF7E878C))
-            .padding(horizontal = 14.dp, vertical = 6.dp)
+            .clip(RoundedCornerShape(cornerRadiusDp.dp))
+            .background(bgColor.copy(alpha = bgOpacity.coerceIn(0f, 1f)))
+            .padding(horizontal = horizontalPaddingDp.dp, vertical = verticalPaddingDp.dp)
             .testTag("watermark_chip")
     ) {
         Text(
             text = handle,
-            color = Color.White,
-            fontSize = 12.sp,
+            color = textColor,
+            fontSize = textSizeSp.sp,
             fontWeight = FontWeight.Normal,
             fontFamily = FontFamily.SansSerif,
             letterSpacing = 0.2.sp

@@ -25,6 +25,13 @@ data class SavedQuoteEntity(
     val watermarkHandle: String,
     val watermarkPosition: String,
     val watermarkOpacity: Float = 1.0f,
+    val watermarkPaddingHorizontal: Float = 14f,
+    val watermarkPaddingVertical: Float = 6f,
+    val watermarkCornerRadius: Float = 8f,
+    val watermarkBgColor: Long = 0xFF7E878CL,
+    val watermarkTextSizeSp: Float = 12f,
+    val watermarkTextColor: Long = 0xFFFFFFFFL,
+    val watermarkMargin: Float = 16f,
     val exportedImagePath: String?,
     val createdAt: Long = System.currentTimeMillis()
 ) {
@@ -47,7 +54,14 @@ data class SavedQuoteEntity(
             showWatermark = showWatermark,
             watermarkHandle = watermarkHandle,
             watermarkPosition = watermarkPosition,
-            watermarkOpacity = watermarkOpacity
+            watermarkOpacity = watermarkOpacity,
+            watermarkPaddingHorizontal = watermarkPaddingHorizontal,
+            watermarkPaddingVertical = watermarkPaddingVertical,
+            watermarkCornerRadius = watermarkCornerRadius,
+            watermarkBgColor = watermarkBgColor,
+            watermarkTextSizeSp = watermarkTextSizeSp,
+            watermarkTextColor = watermarkTextColor,
+            watermarkMargin = watermarkMargin
         )
     }
 
@@ -71,6 +85,13 @@ data class SavedQuoteEntity(
                 watermarkHandle = spec.watermarkHandle,
                 watermarkPosition = spec.watermarkPosition,
                 watermarkOpacity = spec.watermarkOpacity,
+                watermarkPaddingHorizontal = spec.watermarkPaddingHorizontal,
+                watermarkPaddingVertical = spec.watermarkPaddingVertical,
+                watermarkCornerRadius = spec.watermarkCornerRadius,
+                watermarkBgColor = spec.watermarkBgColor,
+                watermarkTextSizeSp = spec.watermarkTextSizeSp,
+                watermarkTextColor = spec.watermarkTextColor,
+                watermarkMargin = spec.watermarkMargin,
                 exportedImagePath = imagePath
             )
         }
