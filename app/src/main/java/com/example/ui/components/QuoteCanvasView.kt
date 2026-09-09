@@ -31,7 +31,8 @@ import kotlin.math.sin
 @Composable
 fun QuoteCanvasView(
     spec: QuoteCardSpec,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    clipCardCorners: Boolean = true
 ) {
     val context = LocalContext.current
 
@@ -39,8 +40,15 @@ fun QuoteCanvasView(
         modifier = modifier
             .aspectRatio(1f)
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .shadow(elevation = 16.dp, shape = RoundedCornerShape(16.dp))
+            .then(
+                if (clipCardCorners) {
+                    Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .shadow(elevation = 16.dp, shape = RoundedCornerShape(16.dp))
+                } else {
+                    Modifier
+                }
+            )
             .testTag("quote_canvas_preview")
     ) {
         // 1. Background layer

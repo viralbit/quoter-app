@@ -12,6 +12,7 @@ import androidx.compose.material.icons.automirrored.filled.Redo
 import androidx.compose.material.icons.automirrored.filled.Undo
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -121,7 +122,10 @@ fun EditorScreen(
                     // Export Action Button
                     Button(
                         onClick = { onNavigateToExport(currentSpec) },
-                        colors = ButtonDefaults.buttonColors(containerColor = StudioPrimary),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = StudioPrimary,
+                            contentColor = StudioTextOnGold
+                        ),
                         shape = RoundedCornerShape(20.dp),
                         modifier = Modifier
                             .padding(end = 8.dp)
@@ -131,14 +135,14 @@ fun EditorScreen(
                             imageVector = Icons.Default.IosShare,
                             contentDescription = null,
                             modifier = Modifier.size(16.dp),
-                            tint = Color.White
+                            tint = StudioTextOnGold
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = "Export",
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = StudioTextOnGold
                         )
                     }
                 },
@@ -172,6 +176,12 @@ fun EditorScreen(
                 selectedTabIndex = activeTab,
                 containerColor = StudioSurface,
                 contentColor = StudioPrimary,
+                indicator = { tabPositions ->
+                    TabRowDefaults.SecondaryIndicator(
+                        modifier = Modifier.tabIndicatorOffset(tabPositions[activeTab]),
+                        color = StudioPrimary
+                    )
+                },
                 divider = { HorizontalDivider(color = StudioCardBorder) },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -184,7 +194,7 @@ fun EditorScreen(
                                 text = title,
                                 fontWeight = if (activeTab == index) FontWeight.Bold else FontWeight.Medium,
                                 fontSize = 13.sp,
-                                color = if (activeTab == index) StudioPrimaryVariant else StudioTextMuted
+                                color = if (activeTab == index) StudioPrimary else StudioTextMuted
                             )
                         },
                         modifier = Modifier.testTag("tab_$title")
@@ -228,11 +238,11 @@ fun EditorScreen(
                                     unfocusedBorderColor = StudioCardBorder,
                                     focusedTextColor = StudioTextPrimary,
                                     unfocusedTextColor = StudioTextPrimary,
-                                    focusedLabelColor = StudioPrimaryVariant,
+                                    focusedLabelColor = StudioPrimary,
                                     unfocusedLabelColor = StudioTextSecondary,
                                     cursorColor = StudioPrimary,
-                                    focusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f),
-                                    unfocusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f)
+                                    focusedContainerColor = StudioSurfaceVariant,
+                                    unfocusedContainerColor = StudioSurfaceVariant
                                 ),
                                 modifier = Modifier
                                     .fillMaxWidth()

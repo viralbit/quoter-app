@@ -12,13 +12,13 @@ data class QuoteCardSpec(
     val fontFamilyName: String = "Serif",
     val fontSize: Float = 28f, // sp (10 to 64)
     val fontWeightValue: Int = 600,
-    val textColor: Long = 0xFFFFFFFFL,
+    val textColor: Long = 0xFF121212L,
     val textAlignValue: String = "Center", // "Left", "Center", "Right"
     val letterSpacingSp: Float = 0.5f,
     val lineSpacingMultiplier: Float = 1.3f,
-    val backgroundType: String = "GRADIENT", // "GRADIENT", "SOLID", "PHOTO"
-    val bgColor1: Long = 0xFF0F0C20L,
-    val bgColor2: Long = 0xFF2A1647L,
+    val backgroundType: String = "SOLID", // "SOLID", "GRADIENT", "PHOTO"
+    val bgColor1: Long = 0xFFFFFFFFL,
+    val bgColor2: Long = 0xFFF5F5F5L,
     val gradientAngle: Float = 135f,
     val photoUri: String? = null,
     val photoScale: Float = 1.0f,
@@ -86,29 +86,29 @@ object StudioPresets {
     )
 
     val solidColors = listOf(
-        0xFF0A0A0CL,
-        0xFF121016L,
-        0xFF1E1B29L,
-        0xFF241C38L,
-        0xFF1B2838L,
-        0xFF0D2818L,
-        0xFF341010L,
-        0xFF292524L,
-        0xFFFFFFFFL,
-        0xFFF5F3EFL
+        0xFFFFFFFFL, // Pure White
+        0xFFF8F9FAL, // Soft Off-White
+        0xFFFFFBEBL, // Warm Cream
+        0xFFF1F5F9L, // Crisp Slate
+        0xFF0D0D0DL, // Near Black
+        0xFF171717L, // Deep Charcoal
+        0xFF1E1B29L, // Dark Plum
+        0xFF1B2838L, // Midnight Navy
+        0xFF0D2818L, // Deep Forest
+        0xFF2B1704L  // Deep Amber
     )
 
     val textColors = listOf(
-        0xFFFFFFFFL,
-        0xFFF3F4F6L,
-        0xFFE2E8F0L,
-        0xFFFDE047L,
-        0xFF67E8F9L,
-        0xFFA78BFAL,
-        0xFFF472B6L,
-        0xFF4ADE80L,
-        0xFFF87171L,
-        0xFF0F172AL
+        0xFF121212L, // Near Black
+        0xFF1F2937L, // Deep Slate
+        0xFF4B5563L, // Charcoal Gray
+        0xFFFFFFFFL, // Pure White
+        0xFFF3F4F6L, // Off White
+        0xFFF2C200L, // Gold Accent
+        0xFFFDE047L, // Pale Yellow
+        0xFF67E8F9L, // Light Cyan
+        0xFFA78BFAL, // Soft Violet
+        0xFFF472B6L  // Soft Pink
     )
 
     val fontFamilies = listOf(

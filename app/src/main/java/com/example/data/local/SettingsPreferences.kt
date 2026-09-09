@@ -15,19 +15,19 @@ class SettingsPreferences(context: Context) {
         set(value) = prefs.edit().putFloat(KEY_DEFAULT_FONT_SIZE, value).apply()
 
     var defaultTextColor: Long
-        get() = prefs.getLong(KEY_DEFAULT_TEXT_COLOR, 0xFFFFFFFFL)
+        get() = prefs.getLong(KEY_DEFAULT_TEXT_COLOR, 0xFF121212L)
         set(value) = prefs.edit().putLong(KEY_DEFAULT_TEXT_COLOR, value).apply()
 
     var defaultBgType: String
-        get() = prefs.getString(KEY_DEFAULT_BG_TYPE, "GRADIENT") ?: "GRADIENT"
+        get() = prefs.getString(KEY_DEFAULT_BG_TYPE, "SOLID") ?: "SOLID"
         set(value) = prefs.edit().putString(KEY_DEFAULT_BG_TYPE, value).apply()
 
     var defaultBgColor1: Long
-        get() = prefs.getLong(KEY_DEFAULT_BG_COLOR_1, 0xFF0F0C20L)
+        get() = prefs.getLong(KEY_DEFAULT_BG_COLOR_1, 0xFFFFFFFFL)
         set(value) = prefs.edit().putLong(KEY_DEFAULT_BG_COLOR_1, value).apply()
 
     var defaultBgColor2: Long
-        get() = prefs.getLong(KEY_DEFAULT_BG_COLOR_2, 0xFF2A1647L)
+        get() = prefs.getLong(KEY_DEFAULT_BG_COLOR_2, 0xFFF5F5F5L)
         set(value) = prefs.edit().putLong(KEY_DEFAULT_BG_COLOR_2, value).apply()
 
     var defaultWatermarkEnabled: Boolean

@@ -1,21 +1,21 @@
 package com.example.ui.theme
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-private val QuoteGenLightColorScheme = lightColorScheme(
+private val QuoteGenDarkColorScheme = darkColorScheme(
     primary = StudioPrimary,
-    onPrimary = Color.White,
-    primaryContainer = StudioGreenTint,
-    onPrimaryContainer = StudioPrimaryVariant,
+    onPrimary = StudioTextOnGold,
+    primaryContainer = StudioGoldTint,
+    onPrimaryContainer = StudioPrimary,
     secondary = StudioSecondary,
-    onSecondary = Color.White,
+    onSecondary = StudioTextOnGold,
     secondaryContainer = StudioSurfaceVariant,
     onSecondaryContainer = StudioTextPrimary,
     tertiary = StudioTertiary,
-    onTertiary = Color.White,
+    onTertiary = StudioTextOnGold,
     background = StudioAppBg,
     onBackground = StudioTextPrimary,
     surface = StudioSurface,
@@ -23,7 +23,7 @@ private val QuoteGenLightColorScheme = lightColorScheme(
     surfaceVariant = StudioSurfaceVariant,
     onSurfaceVariant = StudioTextSecondary,
     outline = StudioCardBorder,
-    outlineVariant = StudioGreenGlow,
+    outlineVariant = StudioGoldBorder,
     error = StudioError,
     onError = Color.White
 )
@@ -33,7 +33,7 @@ fun QuoteGenTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colorScheme = QuoteGenLightColorScheme,
+        colorScheme = QuoteGenDarkColorScheme,
         typography = Typography,
         content = content
     )
@@ -46,4 +46,5 @@ fun QuoteStudioTheme(
 ) {
     QuoteGenTheme(content = content)
 }
+
 

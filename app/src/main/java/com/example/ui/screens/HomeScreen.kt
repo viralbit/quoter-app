@@ -93,8 +93,8 @@ fun HomeScreen(
                 // Secondary FAB: New Batch
                 ExtendedFloatingActionButton(
                     onClick = onNewBatch,
-                    containerColor = StudioSurface,
-                    contentColor = StudioPrimaryVariant,
+                    containerColor = StudioSurfaceVariant,
+                    contentColor = StudioTextPrimary,
                     elevation = FloatingActionButtonDefaults.elevation(3.dp),
                     shape = RoundedCornerShape(16.dp),
                     modifier = Modifier
@@ -110,14 +110,14 @@ fun HomeScreen(
                 ExtendedFloatingActionButton(
                     onClick = onNewQuote,
                     containerColor = StudioPrimary,
-                    contentColor = Color.White,
+                    contentColor = StudioTextOnGold,
                     elevation = FloatingActionButtonDefaults.elevation(6.dp),
                     shape = RoundedCornerShape(18.dp),
                     modifier = Modifier.testTag("fab_new_quote")
                 ) {
-                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(20.dp))
+                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(20.dp), tint = StudioTextOnGold)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("New Quote", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    Text("New Quote", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = StudioTextOnGold)
                 }
             }
         },
@@ -144,7 +144,7 @@ fun HomeScreen(
                             .background(
                                 Brush.linearGradient(
                                     listOf(
-                                        StudioGreenTint,
+                                        StudioGoldTint,
                                         StudioSurface
                                     )
                                 )
@@ -188,25 +188,28 @@ fun HomeScreen(
                             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                                 Button(
                                     onClick = onNewQuote,
-                                    colors = ButtonDefaults.buttonColors(containerColor = StudioPrimary),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = StudioPrimary,
+                                        contentColor = StudioTextOnGold
+                                    ),
                                     shape = RoundedCornerShape(12.dp),
                                     modifier = Modifier.weight(1f)
                                 ) {
-                                    Icon(Icons.Default.Brush, contentDescription = null, modifier = Modifier.size(16.dp))
+                                    Icon(Icons.Default.Brush, contentDescription = null, modifier = Modifier.size(16.dp), tint = StudioTextOnGold)
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Single Quote", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                                    Text("Single Quote", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = StudioTextOnGold)
                                 }
 
                                 OutlinedButton(
                                     onClick = onNewBatch,
                                     shape = RoundedCornerShape(12.dp),
-                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = StudioPrimaryVariant),
+                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = StudioPrimary),
                                     border = BorderStroke(1.dp, StudioPrimary),
                                     modifier = Modifier.weight(1f)
                                 ) {
-                                    Icon(Icons.Default.Layers, contentDescription = null, modifier = Modifier.size(16.dp))
+                                    Icon(Icons.Default.Layers, contentDescription = null, modifier = Modifier.size(16.dp), tint = StudioPrimary)
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Batch Editor", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                                    Text("Batch Editor", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = StudioPrimary)
                                 }
                             }
                         }

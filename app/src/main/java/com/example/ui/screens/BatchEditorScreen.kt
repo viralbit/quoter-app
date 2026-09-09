@@ -141,7 +141,10 @@ fun BatchEditorScreen(
                     Button(
                         onClick = { exportAllBatch() },
                         enabled = !isExporting && quotes.any { it.text.isNotBlank() },
-                        colors = ButtonDefaults.buttonColors(containerColor = StudioPrimary),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = StudioPrimary,
+                            contentColor = StudioTextOnGold
+                        ),
                         shape = RoundedCornerShape(20.dp),
                         modifier = Modifier
                             .padding(end = 8.dp)
@@ -151,14 +154,14 @@ fun BatchEditorScreen(
                             imageVector = Icons.Default.Download,
                             contentDescription = null,
                             modifier = Modifier.size(16.dp),
-                            tint = Color.White
+                            tint = StudioTextOnGold
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = if (isExporting) "Exporting ${exportProgress.first}/${exportProgress.second}" else "Export All",
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = StudioTextOnGold
                         )
                     }
                 },
@@ -207,7 +210,7 @@ fun BatchEditorScreen(
                                     text = "${index + 1}",
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = if (isSelected) Color.White else StudioTextPrimary
+                                    color = if (isSelected) StudioTextOnGold else StudioTextPrimary
                                 )
                             }
                         }
@@ -244,7 +247,7 @@ fun BatchEditorScreen(
                             Text(
                                 text = "${sharedSpec.fontSize.toInt()} sp",
                                 style = MaterialTheme.typography.labelMedium,
-                                color = StudioPrimaryVariant,
+                                color = StudioPrimary,
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -283,14 +286,14 @@ fun BatchEditorScreen(
                             quotes.add(BatchQuoteItem())
                             previewIndex = quotes.lastIndex
                         },
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = StudioPrimaryVariant),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = StudioPrimary),
                         border = BorderStroke(1.dp, StudioPrimary),
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier.testTag("add_quote_button")
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp), tint = StudioPrimary)
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Add Quote", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                        Text("Add Quote", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = StudioPrimary)
                     }
                 }
             }
@@ -299,7 +302,7 @@ fun BatchEditorScreen(
                 val isCurrent = index == previewIndex
                 Card(
                     colors = CardDefaults.cardColors(
-                        containerColor = if (isCurrent) StudioGreenTint else StudioSurface
+                        containerColor = if (isCurrent) StudioGoldTint else StudioSurface
                     ),
                     border = BorderStroke(1.dp, if (isCurrent) StudioPrimary else StudioCardBorder),
                     shape = RoundedCornerShape(14.dp),
@@ -320,7 +323,7 @@ fun BatchEditorScreen(
                                 text = "Card #${index + 1}",
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = StudioPrimaryVariant
+                                color = StudioPrimary
                             )
 
                             if (quotes.size > 1) {
@@ -359,11 +362,11 @@ fun BatchEditorScreen(
                                 unfocusedBorderColor = StudioCardBorder,
                                 focusedTextColor = StudioTextPrimary,
                                 unfocusedTextColor = StudioTextPrimary,
-                                focusedLabelColor = StudioPrimaryVariant,
+                                focusedLabelColor = StudioPrimary,
                                 unfocusedLabelColor = StudioTextSecondary,
                                 cursorColor = StudioPrimary,
-                                focusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f),
-                                unfocusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f)
+                                focusedContainerColor = StudioSurfaceVariant,
+                                unfocusedContainerColor = StudioSurfaceVariant
                             ),
                             modifier = Modifier.fillMaxWidth()
                         )

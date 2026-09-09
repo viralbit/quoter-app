@@ -104,7 +104,7 @@ fun StylingControls(
                                 text = font,
                                 fontFamily = previewFontFamily,
                                 fontWeight = FontWeight.Bold,
-                                color = if (isSelected) Color.White else StudioTextPrimary,
+                                color = if (isSelected) StudioTextOnGold else StudioTextPrimary,
                                 fontSize = 13.sp
                             )
                         }
@@ -218,7 +218,7 @@ fun StylingControls(
                             Icon(
                                 imageVector = icon,
                                 contentDescription = alignName,
-                                tint = if (isSelected) Color.White else StudioTextMuted,
+                                tint = if (isSelected) StudioTextOnGold else StudioTextMuted,
                                 modifier = Modifier.size(18.dp)
                             )
                         }
@@ -263,7 +263,7 @@ fun StylingControls(
                                 text = label,
                                 fontSize = 12.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                color = if (isSelected) Color.White else StudioTextPrimary
+                                color = if (isSelected) StudioTextOnGold else StudioTextPrimary
                             )
                         }
                     }
@@ -388,15 +388,15 @@ fun AlightStyleScrubber(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(6.dp))
-                            .background(StudioGreenTint)
-                            .border(1.dp, StudioCardBorder, RoundedCornerShape(6.dp))
+                            .background(StudioGoldTint)
+                            .border(1.dp, StudioGoldBorder, RoundedCornerShape(6.dp))
                             .padding(horizontal = 8.dp, vertical = 3.dp)
                     ) {
                         Text(
                             text = formatDisplay(value),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.ExtraBold,
-                            color = StudioPrimaryVariant,
+                            color = StudioPrimary,
                             letterSpacing = 0.5.sp
                         )
                     }
@@ -514,7 +514,7 @@ fun AlightStyleScrubber(
                             text = label,
                             fontSize = 11.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                            color = if (isSelected) Color.White else StudioTextPrimary
+                            color = if (isSelected) StudioTextOnGold else StudioTextPrimary
                         )
                     }
                 }

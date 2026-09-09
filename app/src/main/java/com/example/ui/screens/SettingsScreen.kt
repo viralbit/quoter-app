@@ -125,7 +125,7 @@ fun SettingsScreen(
                             checked = watermarkEnabled,
                             onCheckedChange = { watermarkEnabled = it },
                             colors = SwitchDefaults.colors(
-                                checkedThumbColor = Color.White,
+                                checkedThumbColor = StudioTextOnGold,
                                 checkedTrackColor = StudioPrimary,
                                 uncheckedThumbColor = StudioTextMuted,
                                 uncheckedTrackColor = StudioSurfaceVariant
@@ -145,11 +145,11 @@ fun SettingsScreen(
                             unfocusedBorderColor = StudioCardBorder,
                             focusedTextColor = StudioTextPrimary,
                             unfocusedTextColor = StudioTextPrimary,
-                            focusedLabelColor = StudioPrimaryVariant,
+                            focusedLabelColor = StudioPrimary,
                             unfocusedLabelColor = StudioTextSecondary,
                             cursorColor = StudioPrimary,
-                            focusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f),
-                            unfocusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f)
+                            focusedContainerColor = StudioSurfaceVariant,
+                            unfocusedContainerColor = StudioSurfaceVariant
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
@@ -199,7 +199,7 @@ fun SettingsScreen(
                             ) {
                                 Text(
                                     text = font,
-                                    color = if (isSelected) Color.White else StudioTextPrimary,
+                                    color = if (isSelected) StudioTextOnGold else StudioTextPrimary,
                                     fontSize = 12.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                                 )
@@ -220,7 +220,7 @@ fun SettingsScreen(
                             text = "${fontSize.toInt()} sp",
                             fontSize = 13.sp,
                             fontWeight = FontWeight.Bold,
-                            color = StudioPrimaryVariant
+                            color = StudioPrimary
                         )
                     }
 
@@ -303,7 +303,7 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(text = "Package", fontSize = 12.sp, color = StudioTextSecondary)
-                        Text(text = "com.aistudio.quotegen.rfwq", fontSize = 12.sp, color = StudioPrimaryVariant, fontWeight = FontWeight.SemiBold)
+                        Text(text = "com.aistudio.quotegen.rfwq", fontSize = 12.sp, color = StudioPrimary, fontWeight = FontWeight.SemiBold)
                     }
 
                     Row(
@@ -319,13 +319,16 @@ fun SettingsScreen(
             // Save Settings Button
             Button(
                 onClick = { saveSettings() },
-                colors = ButtonDefaults.buttonColors(containerColor = StudioPrimary),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = StudioPrimary,
+                    contentColor = StudioTextOnGold
+                ),
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
             ) {
-                Text(text = "Save Settings as Defaults", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                Text(text = "Save Settings as Defaults", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = StudioTextOnGold)
             }
 
             Spacer(modifier = Modifier.height(40.dp))

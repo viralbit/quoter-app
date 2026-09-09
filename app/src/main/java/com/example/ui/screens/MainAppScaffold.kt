@@ -47,8 +47,8 @@ fun MainAppScaffold(
                             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
                             label = { Text("Home") },
                             colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = Color.White,
-                                selectedTextColor = StudioPrimaryVariant,
+                                selectedIconColor = StudioTextOnGold,
+                                selectedTextColor = StudioPrimary,
                                 indicatorColor = StudioPrimary,
                                 unselectedIconColor = StudioTextMuted,
                                 unselectedTextColor = StudioTextMuted
@@ -62,8 +62,8 @@ fun MainAppScaffold(
                             icon = { Icon(Icons.Default.BookmarkBorder, contentDescription = "History") },
                             label = { Text("Saved") },
                             colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = Color.White,
-                                selectedTextColor = StudioPrimaryVariant,
+                                selectedIconColor = StudioTextOnGold,
+                                selectedTextColor = StudioPrimary,
                                 indicatorColor = StudioPrimary,
                                 unselectedIconColor = StudioTextMuted,
                                 unselectedTextColor = StudioTextMuted
@@ -77,8 +77,8 @@ fun MainAppScaffold(
                             icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
                             label = { Text("Settings") },
                             colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = Color.White,
-                                selectedTextColor = StudioPrimaryVariant,
+                                selectedIconColor = StudioTextOnGold,
+                                selectedTextColor = StudioPrimary,
                                 indicatorColor = StudioPrimary,
                                 unselectedIconColor = StudioTextMuted,
                                 unselectedTextColor = StudioTextMuted

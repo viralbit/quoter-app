@@ -86,7 +86,7 @@ fun BackgroundControls(
                         },
                         fontSize = 13.sp,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        color = if (isSelected) Color.White else StudioTextPrimary
+                        color = if (isSelected) StudioTextOnGold else StudioTextPrimary
                     )
                 }
             }
@@ -162,7 +162,7 @@ fun BackgroundControls(
                         Text(
                             text = "${spec.gradientAngle.toInt()}°",
                             style = MaterialTheme.typography.labelMedium,
-                            color = StudioPrimaryVariant,
+                            color = StudioPrimary,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -191,7 +191,7 @@ fun BackgroundControls(
                                     text = "${angle.toInt()}°",
                                     fontSize = 11.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                    color = if (isSelected) Color.White else StudioTextPrimary
+                                    color = if (isSelected) StudioTextOnGold else StudioTextPrimary
                                 )
                             }
                         }
@@ -243,16 +243,19 @@ fun BackgroundControls(
                                     PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                                 )
                             },
-                            colors = ButtonDefaults.buttonColors(containerColor = StudioPrimary),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = StudioPrimary,
+                                contentColor = StudioTextOnGold
+                            ),
                             shape = RoundedCornerShape(12.dp),
                             modifier = Modifier
                                 .weight(1f)
                                 .height(44.dp)
                                 .testTag("pick_photo_button")
                         ) {
-                            Icon(Icons.Default.AddPhotoAlternate, contentDescription = null, modifier = Modifier.size(18.dp), tint = Color.White)
+                            Icon(Icons.Default.AddPhotoAlternate, contentDescription = null, modifier = Modifier.size(18.dp), tint = StudioTextOnGold)
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Select Photo", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                            Text("Select Photo", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = StudioTextOnGold)
                         }
 
                         if (spec.photoUri != null) {
@@ -290,7 +293,7 @@ fun BackgroundControls(
                                 Text(
                                     text = "${String.format("%.1f", spec.photoScale)}x",
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = StudioPrimaryVariant,
+                                    color = StudioPrimary,
                                     fontWeight = FontWeight.Bold
                                 )
                             }

@@ -54,7 +54,7 @@ fun WatermarkControls(
                 checked = spec.showWatermark,
                 onCheckedChange = { onSpecChange(spec.copy(showWatermark = it)) },
                 colors = SwitchDefaults.colors(
-                    checkedThumbColor = Color.White,
+                    checkedThumbColor = StudioTextOnGold,
                     checkedTrackColor = StudioPrimary,
                     uncheckedThumbColor = StudioTextMuted,
                     uncheckedTrackColor = StudioSurfaceVariant
@@ -77,11 +77,11 @@ fun WatermarkControls(
                     unfocusedBorderColor = StudioCardBorder,
                     focusedTextColor = StudioTextPrimary,
                     unfocusedTextColor = StudioTextPrimary,
-                    focusedLabelColor = StudioPrimaryVariant,
+                    focusedLabelColor = StudioPrimary,
                     unfocusedLabelColor = StudioTextSecondary,
                     cursorColor = StudioPrimary,
-                    focusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f),
-                    unfocusedContainerColor = StudioSurfaceVariant.copy(alpha = 0.4f)
+                    focusedContainerColor = StudioSurfaceVariant,
+                    unfocusedContainerColor = StudioSurfaceVariant
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -119,14 +119,14 @@ fun WatermarkControls(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(8.dp))
-                            .background(StudioGreenTint)
-                            .border(1.dp, StudioCardBorder, RoundedCornerShape(8.dp))
+                            .background(StudioGoldTint)
+                            .border(1.dp, StudioGoldBorder, RoundedCornerShape(8.dp))
                             .padding(horizontal = 10.dp, vertical = 4.dp)
                     ) {
                         Text(
                             text = "${(spec.watermarkOpacity * 100).toInt()}%",
                             style = MaterialTheme.typography.labelMedium,
-                            color = StudioPrimaryVariant,
+                            color = StudioPrimary,
                             fontWeight = FontWeight.ExtraBold
                         )
                     }
@@ -205,7 +205,7 @@ fun WatermarkControls(
                                 text = label,
                                 fontSize = 11.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                color = if (isSelected) Color.White else StudioTextPrimary
+                                color = if (isSelected) StudioTextOnGold else StudioTextPrimary
                             )
                         }
                     }
@@ -251,7 +251,7 @@ fun WatermarkControls(
                                 text = label,
                                 fontSize = 11.sp,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                color = if (isSelected) Color.White else StudioTextPrimary
+                                color = if (isSelected) StudioTextOnGold else StudioTextPrimary
                             )
                         }
                     }

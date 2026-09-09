@@ -195,13 +195,16 @@ fun HistoryScreen(
                                 selectedQuoteForDialog = null
                                 onEditQuote(spec)
                             },
-                            colors = ButtonDefaults.buttonColors(containerColor = StudioPrimary),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = StudioPrimary,
+                                contentColor = StudioTextOnGold
+                            ),
                             shape = RoundedCornerShape(10.dp),
                             modifier = Modifier.weight(1f)
                         ) {
-                            Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(16.dp), tint = Color.White)
+                            Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(16.dp), tint = StudioTextOnGold)
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("Edit", fontSize = 13.sp, color = Color.White)
+                            Text("Edit", fontSize = 13.sp, color = StudioTextOnGold, fontWeight = FontWeight.Bold)
                         }
 
                         // Share
@@ -213,13 +216,13 @@ fun HistoryScreen(
                                 }
                             },
                             shape = RoundedCornerShape(10.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(contentColor = StudioPrimaryVariant),
+                            colors = ButtonDefaults.outlinedButtonColors(contentColor = StudioPrimary),
                             border = BorderStroke(1.dp, StudioPrimary),
                             modifier = Modifier.weight(1f)
                         ) {
-                            Icon(Icons.Default.IosShare, contentDescription = null, modifier = Modifier.size(16.dp), tint = StudioPrimaryVariant)
+                            Icon(Icons.Default.IosShare, contentDescription = null, modifier = Modifier.size(16.dp), tint = StudioPrimary)
                             Spacer(modifier = Modifier.width(4.dp))
-                            Text("Share", fontSize = 13.sp, color = StudioPrimaryVariant)
+                            Text("Share", fontSize = 13.sp, color = StudioPrimary, fontWeight = FontWeight.Bold)
                         }
 
                         // Delete

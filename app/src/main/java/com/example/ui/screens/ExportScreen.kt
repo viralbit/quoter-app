@@ -19,13 +19,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.example.data.model.QuoteCardSpec
 import com.example.data.repository.QuoteRepository
 import com.example.ui.components.QuoteCanvasView
@@ -52,11 +54,27 @@ fun ExportScreen(
     var isSavedToGallery by remember { mutableStateOf(false) }
     var isSavedToHistory by remember { mutableStateOf(false) }
 
+    // Direct reference to the on-screen preview ComposeView for pixel-consistent capture
+    var previewComposeView by remember { mutableStateOf<ComposeView?>(null) }
+
+    suspend fun capturePreviewBitmap(targetResolution: Int): Bitmap {
+        val view = previewComposeView
+        if (view != null && view.width > 0 && view.height > 0) {
+            val bitmap = Bitmap.createBitmap(targetResolution, targetResolution, Bitmap.Config.ARGB_8888)
+            val canvas = android.graphics.Canvas(bitmap)
+            val scale = targetResolution.toFloat() / view.width.toFloat()
+            canvas.scale(scale, scale)
+            view.draw(canvas)
+            return bitmap
+        }
+        return QuoteBitmapRenderer.renderToBitmap(context, exportSpec, targetResolution)
+    }
+
     fun handleSaveToGallery() {
         isRendering = true
         coroutineScope.launch {
             try {
-                val bitmap = QuoteBitmapRenderer.renderToBitmap(context, exportSpec, selectedResolution)
+                val bitmap = capturePreviewBitmap(selectedResolution)
                 val result = ExportManager.saveBitmapToGallery(context, bitmap, "Quote_${System.currentTimeMillis()}")
                 isRendering = false
                 if (result.isSuccess) {
@@ -74,7 +92,7 @@ fun ExportScreen(
 
     fun handleShare() {
         coroutineScope.launch {
-            val bitmap = QuoteBitmapRenderer.renderToBitmap(context, exportSpec, selectedResolution)
+            val bitmap = capturePreviewBitmap(selectedResolution)
             ExportManager.shareBitmap(context, bitmap, "Quote Studio")
         }
     }
@@ -136,13 +154,42 @@ fun ExportScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // 1. WYSIWYG CANVAS PREVIEW
-            QuoteCanvasView(
-                spec = exportSpec,
+            // 1. WYSIWYG CANVAS PREVIEW (Captured directly for export to guarantee zero drift)
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .widthIn(max = 320.dp)
+                    .aspectRatio(1f)
+                    .clip(RoundedCornerShape(16.dp))
+                    .shadow(elevation = 16.dp, shape = RoundedCornerShape(16.dp))
                     .testTag("export_preview_canvas")
-            )
+            ) {
+                AndroidView(
+                    factory = { ctx ->
+                        ComposeView(ctx).apply {
+                            setContent {
+                                QuoteCanvasView(
+                                    spec = exportSpec,
+                                    clipCardCorners = false,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+                            previewComposeView = this
+                        }
+                    },
+                    update = { view ->
+                        view.setContent {
+                            QuoteCanvasView(
+                                spec = exportSpec,
+                                clipCardCorners = false,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                        previewComposeView = view
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
 
             // 2. RESOLUTION SELECTOR CHIPS
             Card(
@@ -192,7 +239,7 @@ fun ExportScreen(
                                     text = label,
                                     fontSize = 11.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                    color = if (isSelected) Color.White else StudioTextPrimary
+                                    color = if (isSelected) StudioTextOnGold else StudioTextPrimary
                                 )
                             }
                         }
@@ -221,7 +268,7 @@ fun ExportScreen(
                             checked = exportSpec.showWatermark,
                             onCheckedChange = { exportSpec = exportSpec.copy(showWatermark = it) },
                             colors = SwitchDefaults.colors(
-                                checkedThumbColor = Color.White,
+                                checkedThumbColor = StudioTextOnGold,
                                 checkedTrackColor = StudioPrimary,
                                 uncheckedThumbColor = StudioTextMuted,
                                 uncheckedTrackColor = StudioSurfaceVariant
@@ -240,7 +287,10 @@ fun ExportScreen(
                 Button(
                     onClick = { handleSaveToGallery() },
                     enabled = !isRendering,
-                    colors = ButtonDefaults.buttonColors(containerColor = StudioPrimary),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = StudioPrimary,
+                        contentColor = StudioTextOnGold
+                    ),
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -248,21 +298,21 @@ fun ExportScreen(
                         .testTag("save_to_gallery_button")
                 ) {
                     if (isRendering) {
-                        CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
+                        CircularProgressIndicator(color = StudioTextOnGold, modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Rendering HD Card...", fontWeight = FontWeight.Bold, color = Color.White)
+                        Text("Rendering HD Card...", fontWeight = FontWeight.Bold, color = StudioTextOnGold)
                     } else {
                         Icon(
                             imageVector = if (isSavedToGallery) Icons.Default.CheckCircle else Icons.Default.Download,
                             contentDescription = null,
-                            tint = Color.White
+                            tint = StudioTextOnGold
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = if (isSavedToGallery) "Saved to Gallery! Tap to Save Again" else "Save HD to Gallery",
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = StudioTextOnGold
                         )
                     }
                 }
@@ -271,16 +321,16 @@ fun ExportScreen(
                 OutlinedButton(
                     onClick = { handleShare() },
                     shape = RoundedCornerShape(14.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = StudioPrimaryVariant),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = StudioPrimary),
                     border = BorderStroke(1.dp, StudioPrimary),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
                         .testTag("share_quote_button")
                 ) {
-                    Icon(Icons.Default.Share, contentDescription = null, modifier = Modifier.size(18.dp), tint = StudioPrimaryVariant)
+                    Icon(Icons.Default.Share, contentDescription = null, modifier = Modifier.size(18.dp), tint = StudioPrimary)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Share Quote Card", fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = StudioPrimaryVariant)
+                    Text("Share Quote Card", fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = StudioPrimary)
                 }
 
                 // Save to History Button
