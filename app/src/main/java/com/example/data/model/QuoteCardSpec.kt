@@ -25,7 +25,7 @@ data class QuoteCardSpec(
     val photoPanX: Float = 0f,
     val photoPanY: Float = 0f,
     val showWatermark: Boolean = true,
-    val watermarkHandle: String = "@quotestudio",
+    val watermarkHandle: String = "Mosh Quotes",
     val watermarkPosition: String = "BOTTOM_RIGHT", // "BOTTOM_RIGHT", "BOTTOM_LEFT", "TOP_RIGHT", "TOP_LEFT"
     val watermarkOpacity: Float = 1.0f // 0.1f to 1.0f
 ) {

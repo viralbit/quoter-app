@@ -45,12 +45,15 @@ jobs:
         with:
           gradle-version: '9.3.1'
 
-      - name: Create temporary debug keystore
+      - name: Setup debug keystore
         run: |
           if [ -f "./debug.keystore" ]; then
             echo "debug.keystore already exists."
+          elif [ -f "./debug.keystore.base64" ]; then
+            echo "Restoring debug.keystore from debug.keystore.base64..."
+            base64 -d ./debug.keystore.base64 > ./debug.keystore
           else
-            echo "debug.keystore missing; creating temporary debug keystore..."
+            echo "debug.keystore missing; creating debug keystore..."
             keytool -genkey -v \
               -keystore ./debug.keystore \
               -alias androiddebugkey \
@@ -65,12 +68,12 @@ jobs:
             echo "Error: Failed to create ./debug.keystore."
             exit 1
           fi
-          echo "Temporary debug keystore verified."
+          echo "Debug keystore verified."
 
       - name: Build debug APK
         run: gradle :app:assembleDebug --stacktrace --no-daemon
 
-      - name: Verify debug APK output
+      - name: Verify debug APK output and signature
         run: |
           EXPECTED_APK="app/build/outputs/apk/debug/app-debug.apk"
           if [ ! -f "$EXPECTED_APK" ]; then
@@ -94,6 +97,14 @@ jobs:
               exit 1
               ;;
           esac
+
+          # Check signature with apksigner if available in Android SDK
+          APKSIGNER=$(find ${ANDROID_HOME:-/opt/android/sdk}/build-tools -name apksigner 2>/dev/null | sort -V | tail -n 1 || true)
+          if [ -n "$APKSIGNER" ] && [ -x "$APKSIGNER" ]; then
+            echo "Verifying APK with apksigner: $APKSIGNER"
+            "$APKSIGNER" verify -v --print-certs "$EXPECTED_APK" || true
+          fi
+
           echo "Debug APK verified successfully: $EXPECTED_APK"
 
       - name: Upload debug APK artifact
@@ -203,9 +214,10 @@ jobs:
           - **APK Asset Filename:** \`${ASSET_NAME}\`
           - **Download Page:** [Direct GitHub Release Page](${RELEASE_URL})
 
-          The APK can be downloaded directly to your phone from the **Assets** section of the GitHub Release page above.
-
-          *Backup:* The Actions artifact **\`app-debug-apk\`** is also preserved and available under this workflow run's Summary artifacts.
+          ### How to Install on Your Phone:
+          1. Tap the link above and download the **\`${ASSET_NAME}\`** (.apk) under the **Assets** section.
+          2. Open the downloaded \`.apk\` file and tap **Install** (allow "Install unknown apps" if prompted).
+          3. *Note:* If you download from Actions Artifacts instead of Releases, GitHub downloads a \`.zip\` archive — extract the \`.apk\` from the ZIP before installing.
           EOF
           else
             echo "::warning::GitHub Release creation did not succeed or was skipped."

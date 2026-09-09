@@ -35,7 +35,7 @@ class SettingsPreferences(context: Context) {
         set(value) = prefs.edit().putBoolean(KEY_DEFAULT_WATERMARK_ENABLED, value).apply()
 
     var defaultWatermarkHandle: String
-        get() = prefs.getString(KEY_DEFAULT_WATERMARK_HANDLE, "@quotestudio") ?: "@quotestudio"
+        get() = prefs.getString(KEY_DEFAULT_WATERMARK_HANDLE, "Mosh Quotes") ?: "Mosh Quotes"
         set(value) = prefs.edit().putString(KEY_DEFAULT_WATERMARK_HANDLE, value).apply()
 
     companion object {

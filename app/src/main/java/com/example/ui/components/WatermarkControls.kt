@@ -45,7 +45,7 @@ fun WatermarkControls(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Subtle gradient pill with your handle",
+                    text = "Flat gray pill with your handle",
                     style = MaterialTheme.typography.bodySmall,
                     color = StudioTextSecondary
                 )

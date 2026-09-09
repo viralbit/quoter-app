@@ -112,7 +112,7 @@ fun QuoteCanvasView(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(14.dp),
+                    .padding(20.dp),
                 contentAlignment = alignment
             ) {
                 WatermarkChip(
@@ -155,47 +155,22 @@ fun WatermarkChip(
     opacity: Float = 1.0f,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = modifier
             .alpha(opacity.coerceIn(0.05f, 1.0f))
-            .clip(RoundedCornerShape(50))
-            .background(
-                Brush.linearGradient(
-                    colors = listOf(
-                        Color(0xB02D1A50),
-                        Color(0xB0140F23)
-                    )
-                )
-            )
-            .border(
-                width = 1.dp,
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        Color(0x60FFFFFF),
-                        Color(0x20FFFFFF)
-                    )
-                ),
-                shape = RoundedCornerShape(50)
-            )
-            .padding(horizontal = 10.dp, vertical = 5.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color(0xFF7E878C))
+            .padding(horizontal = 14.dp, vertical = 6.dp)
             .testTag("watermark_chip")
     ) {
         Text(
-            text = "“",
-            color = Color(0xFFB794F4),
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Serif
-        )
-        Spacer(modifier = Modifier.width(4.dp))
-        Text(
             text = handle,
-            color = Color.White.copy(alpha = 0.92f),
-            fontSize = 11.sp,
-            fontWeight = FontWeight.SemiBold,
+            color = Color.White,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Normal,
             fontFamily = FontFamily.SansSerif,
-            letterSpacing = 0.4.sp
+            letterSpacing = 0.2.sp
         )
     }
 }
