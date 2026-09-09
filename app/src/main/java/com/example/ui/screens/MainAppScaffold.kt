@@ -1,18 +1,25 @@
 package com.example.ui.screens
 
 import androidx.compose.animation.*
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.data.model.QuoteCardSpec
 import com.example.data.repository.QuoteRepository
 import com.example.ui.theme.*
@@ -34,96 +41,54 @@ fun MainAppScaffold(
     when (val dest = currentDestination) {
         is ScreenDestination.MainTabs -> {
             Scaffold(
+                contentWindowInsets = WindowInsets(0, 0, 0, 0),
                 bottomBar = {
-                    NavigationBar(
-                        containerColor = StudioSurface,
-                        contentColor = StudioTextPrimary,
-                        tonalElevation = 4.dp,
-                        modifier = Modifier.testTag("bottom_navigation_bar")
-                    ) {
-                        NavigationBarItem(
-                            selected = selectedTab == 0,
-                            onClick = { selectedTab = 0 },
-                            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-                            label = { Text("Home") },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = StudioTextOnGold,
-                                selectedTextColor = StudioPrimary,
-                                indicatorColor = StudioPrimary,
-                                unselectedIconColor = StudioTextMuted,
-                                unselectedTextColor = StudioTextMuted
-                            ),
-                            modifier = Modifier.testTag("tab_nav_home")
-                        )
-
-                        NavigationBarItem(
-                            selected = selectedTab == 1,
-                            onClick = { selectedTab = 1 },
-                            icon = { Icon(Icons.Default.BookmarkBorder, contentDescription = "History") },
-                            label = { Text("Saved") },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = StudioTextOnGold,
-                                selectedTextColor = StudioPrimary,
-                                indicatorColor = StudioPrimary,
-                                unselectedIconColor = StudioTextMuted,
-                                unselectedTextColor = StudioTextMuted
-                            ),
-                            modifier = Modifier.testTag("tab_nav_saved")
-                        )
-
-                        NavigationBarItem(
-                            selected = selectedTab == 2,
-                            onClick = { selectedTab = 2 },
-                            icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
-                            label = { Text("Settings") },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = StudioTextOnGold,
-                                selectedTextColor = StudioPrimary,
-                                indicatorColor = StudioPrimary,
-                                unselectedIconColor = StudioTextMuted,
-                                unselectedTextColor = StudioTextMuted
-                            ),
-                            modifier = Modifier.testTag("tab_nav_settings")
-                        )
-                    }
+                    StudioBottomNavBar(
+                        selectedTab = selectedTab,
+                        onTabSelected = { selectedTab = it }
+                    )
                 },
                 containerColor = StudioAppBg
             ) { innerPadding ->
-                AnimatedContent(
-                    targetState = selectedTab,
-                    label = "TabContentAnimation",
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
-                ) { targetTab ->
-                    when (targetTab) {
-                        0 -> HomeScreen(
-                            repository = repository,
-                            onNewQuote = {
-                                val spec = repository.createInitialSpec()
-                                currentDestination = ScreenDestination.Editor(spec)
-                            },
-                            onNewBatch = {
-                                val spec = repository.createInitialSpec()
-                                currentDestination = ScreenDestination.BatchEditor(spec)
-                            },
-                            onEditQuote = { spec ->
-                                currentDestination = ScreenDestination.Editor(spec)
-                            },
-                            onOpenExport = { spec ->
-                                currentDestination = ScreenDestination.Export(spec)
-                            }
-                        )
-                        1 -> HistoryScreen(
-                            repository = repository,
-                            onEditQuote = { spec ->
-                                currentDestination = ScreenDestination.Editor(spec)
-                            },
-                            onExportQuote = { spec ->
-                                currentDestination = ScreenDestination.Export(spec)
-                            }
-                        )
-                        2 -> SettingsScreen(settings = repository.settings)
+                        .padding(bottom = innerPadding.calculateBottomPadding())
+                ) {
+                    AnimatedContent(
+                        targetState = selectedTab,
+                        label = "TabContentAnimation",
+                        modifier = Modifier.fillMaxSize()
+                    ) { targetTab ->
+                        when (targetTab) {
+                            0 -> HomeScreen(
+                                repository = repository,
+                                onNewQuote = {
+                                    val spec = repository.createInitialSpec()
+                                    currentDestination = ScreenDestination.Editor(spec)
+                                },
+                                onNewBatch = {
+                                    val spec = repository.createInitialSpec()
+                                    currentDestination = ScreenDestination.BatchEditor(spec)
+                                },
+                                onEditQuote = { spec ->
+                                    currentDestination = ScreenDestination.Editor(spec)
+                                },
+                                onOpenExport = { spec ->
+                                    currentDestination = ScreenDestination.Export(spec)
+                                }
+                            )
+                            1 -> HistoryScreen(
+                                repository = repository,
+                                onEditQuote = { spec ->
+                                    currentDestination = ScreenDestination.Editor(spec)
+                                },
+                                onExportQuote = { spec ->
+                                    currentDestination = ScreenDestination.Export(spec)
+                                }
+                            )
+                            2 -> SettingsScreen(settings = repository.settings)
+                        }
                     }
                 }
             }
@@ -163,6 +128,83 @@ fun MainAppScaffold(
                     selectedTab = 0
                 }
             )
+        }
+    }
+}
+
+@Composable
+fun StudioBottomNavBar(
+    selectedTab: Int,
+    onTabSelected: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        color = StudioSurface,
+        border = BorderStroke(0.5.dp, StudioCardBorder),
+        tonalElevation = 0.dp,
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("bottom_navigation_bar")
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(58.dp)
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                val items = listOf(
+                    Triple(0, Icons.Default.Home, "Home"),
+                    Triple(1, Icons.Default.BookmarkBorder, "Saved"),
+                    Triple(2, Icons.Default.Settings, "Settings")
+                )
+                val testTags = listOf("tab_nav_home", "tab_nav_saved", "tab_nav_settings")
+
+                items.forEachIndexed { index, (tabIndex, icon, label) ->
+                    val isSelected = selectedTab == tabIndex
+
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable { onTabSelected(tabIndex) }
+                            .testTag(testTags[index])
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .height(28.dp)
+                                .width(50.dp)
+                                .clip(RoundedCornerShape(14.dp))
+                                .background(if (isSelected) StudioPrimary else Color.Transparent)
+                        ) {
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = label,
+                                tint = if (isSelected) StudioTextOnGold else StudioTextMuted,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = label,
+                            fontSize = 11.sp,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                            color = if (isSelected) StudioPrimary else StudioTextMuted,
+                            maxLines = 1
+                        )
+                    }
+                }
+            }
         }
     }
 }

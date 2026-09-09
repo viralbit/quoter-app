@@ -48,7 +48,10 @@ fun HomeScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.testTag("home_header_title_row")
+                    ) {
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
@@ -61,24 +64,30 @@ fun HomeScreen(
                             Text("“", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 20.sp)
                         }
                         Spacer(modifier = Modifier.width(10.dp))
-                        Column {
+                        Column(verticalArrangement = Arrangement.Center) {
                             Text(
                                 text = "Quote Gen",
                                 fontWeight = FontWeight.ExtraBold,
                                 fontSize = 18.sp,
                                 color = StudioTextPrimary,
-                                letterSpacing = 0.5.sp
+                                letterSpacing = 0.5.sp,
+                                lineHeight = 20.sp
                             )
                             Text(
                                 text = "Creative Studio",
                                 fontSize = 11.sp,
                                 color = StudioPrimaryVariant,
-                                fontWeight = FontWeight.SemiBold
+                                fontWeight = FontWeight.SemiBold,
+                                lineHeight = 13.sp
                             )
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = StudioSurface)
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = StudioAppBg,
+                    scrolledContainerColor = StudioAppBg
+                ),
+                windowInsets = WindowInsets.statusBars
             )
         },
         floatingActionButton = {
@@ -127,7 +136,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // 1. HERO STUDIO BANNER

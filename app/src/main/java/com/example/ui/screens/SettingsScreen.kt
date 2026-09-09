@@ -92,7 +92,11 @@ fun SettingsScreen(
                         Icon(Icons.Default.Save, contentDescription = "Save", tint = StudioPrimary)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = StudioSurface)
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = StudioAppBg,
+                    scrolledContainerColor = StudioAppBg
+                ),
+                windowInsets = WindowInsets.statusBars
             )
         },
         containerColor = StudioAppBg

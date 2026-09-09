@@ -149,8 +149,10 @@ fun EditorScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = StudioSurface
-                )
+                    containerColor = StudioAppBg,
+                    scrolledContainerColor = StudioAppBg
+                ),
+                windowInsets = WindowInsets.statusBars
             )
         },
         containerColor = StudioAppBg

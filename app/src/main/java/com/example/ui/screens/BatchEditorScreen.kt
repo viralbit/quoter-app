@@ -165,7 +165,11 @@ fun BatchEditorScreen(
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = StudioSurface)
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = StudioAppBg,
+                    scrolledContainerColor = StudioAppBg
+                ),
+                windowInsets = WindowInsets.statusBars
             )
         },
         containerColor = StudioAppBg
