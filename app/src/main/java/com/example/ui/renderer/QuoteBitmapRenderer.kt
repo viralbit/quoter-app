@@ -24,56 +24,52 @@ object QuoteBitmapRenderer {
         val bitmap = Bitmap.createBitmap(targetSize, targetSize, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
-        // 1. Draw Background
-        when (spec.backgroundType) {
-            "SOLID" -> {
+        // 1. Draw Background (Solid or Photo)
+        if (spec.backgroundType == "PHOTO" && spec.photoUri != null) {
+            var photoDrawn = false
+            try {
+                val uri = Uri.parse(spec.photoUri)
+                context.contentResolver.openInputStream(uri)?.use { stream ->
+                    val decoded = BitmapFactory.decodeStream(stream)
+                    if (decoded != null) {
+                        val srcRect = Rect(0, 0, decoded.width, decoded.height)
+                        val dstRect = Rect(0, 0, targetSize, targetSize)
+                        // Aspect fill center crop
+                        val scale = maxOf(targetSize.toFloat() / decoded.width, targetSize.toFloat() / decoded.height) * spec.photoScale
+                        val scaledW = decoded.width * scale
+                        val scaledH = decoded.height * scale
+                        val left = (targetSize - scaledW) / 2f + (spec.photoPanX * targetSize / 2f)
+                        val top = (targetSize - scaledH) / 2f + (spec.photoPanY * targetSize / 2f)
+
+                        canvas.drawBitmap(decoded, null, RectF(left, top, left + scaledW, top + scaledH), null)
+
+                        // Dark overlay for text readability
+                        val overlayPaint = Paint().apply {
+                            color = Color.argb(120, 0, 0, 0)
+                            style = Paint.Style.FILL
+                        }
+                        canvas.drawRect(0f, 0f, targetSize.toFloat(), targetSize.toFloat(), overlayPaint)
+                        photoDrawn = true
+                    }
+                }
+            } catch (_: Exception) {
+                photoDrawn = false
+            }
+            if (!photoDrawn) {
+                // Fallback to solid
                 val bgPaint = Paint().apply {
                     color = spec.bgColor1.toInt()
                     style = Paint.Style.FILL
                 }
                 canvas.drawRect(0f, 0f, targetSize.toFloat(), targetSize.toFloat(), bgPaint)
             }
-            "PHOTO" -> {
-                var photoDrawn = false
-                if (spec.photoUri != null) {
-                    try {
-                        val uri = Uri.parse(spec.photoUri)
-                        context.contentResolver.openInputStream(uri)?.use { stream ->
-                            val decoded = BitmapFactory.decodeStream(stream)
-                            if (decoded != null) {
-                                val srcRect = Rect(0, 0, decoded.width, decoded.height)
-                                val dstRect = Rect(0, 0, targetSize, targetSize)
-                                // Aspect fill center crop
-                                val scale = maxOf(targetSize.toFloat() / decoded.width, targetSize.toFloat() / decoded.height) * spec.photoScale
-                                val scaledW = decoded.width * scale
-                                val scaledH = decoded.height * scale
-                                val left = (targetSize - scaledW) / 2f + (spec.photoPanX * targetSize / 2f)
-                                val top = (targetSize - scaledH) / 2f + (spec.photoPanY * targetSize / 2f)
-
-                                canvas.drawBitmap(decoded, null, RectF(left, top, left + scaledW, top + scaledH), null)
-
-                                // Dark overlay for text readability
-                                val overlayPaint = Paint().apply {
-                                    color = Color.argb(120, 0, 0, 0)
-                                    style = Paint.Style.FILL
-                                }
-                                canvas.drawRect(0f, 0f, targetSize.toFloat(), targetSize.toFloat(), overlayPaint)
-                                photoDrawn = true
-                            }
-                        }
-                    } catch (_: Exception) {
-                        photoDrawn = false
-                    }
-                }
-                if (!photoDrawn) {
-                    // Fallback to gradient
-                    drawGradientBg(canvas, spec, targetSize)
-                }
+        } else {
+            // SOLID
+            val bgPaint = Paint().apply {
+                color = spec.bgColor1.toInt()
+                style = Paint.Style.FILL
             }
-            else -> {
-                // GRADIENT
-                drawGradientBg(canvas, spec, targetSize)
-            }
+            canvas.drawRect(0f, 0f, targetSize.toFloat(), targetSize.toFloat(), bgPaint)
         }
 
         // 2. Measure & Draw Main Text (No Author)
@@ -91,6 +87,14 @@ object QuoteBitmapRenderer {
             textSize = scaledFontSize
             this.typeface = typeface
             letterSpacing = spec.letterSpacingSp / 20f
+            if (spec.fontWeightValue >= 800) {
+                isFakeBoldText = true
+            }
+            if (spec.fontWeightValue > 1000) {
+                val extraRatio = ((spec.fontWeightValue - 1000) / 200f).coerceIn(0f, 1f)
+                strokeWidth = extraRatio * (scaledFontSize * 0.035f)
+                style = Paint.Style.FILL_AND_STROKE
+            }
         }
 
         val textAlignment = when (spec.textAlignValue.lowercase()) {
@@ -133,31 +137,6 @@ object QuoteBitmapRenderer {
         }
 
         bitmap
-    }
-
-    private fun drawGradientBg(canvas: Canvas, spec: QuoteCardSpec, targetSize: Int) {
-        val angleRad = Math.toRadians(spec.gradientAngle.toDouble())
-        val half = targetSize / 2f
-        val cos = cos(angleRad).toFloat()
-        val sin = sin(angleRad).toFloat()
-
-        val x0 = half - (cos * half)
-        val y0 = half - (sin * half)
-        val x1 = half + (cos * half)
-        val y1 = half + (sin * half)
-
-        val shader = LinearGradient(
-            x0, y0, x1, y1,
-            spec.bgColor1.toInt(),
-            spec.bgColor2.toInt(),
-            Shader.TileMode.CLAMP
-        )
-
-        val paint = Paint().apply {
-            this.shader = shader
-            style = Paint.Style.FILL
-        }
-        canvas.drawRect(0f, 0f, targetSize.toFloat(), targetSize.toFloat(), paint)
     }
 
     private fun drawWatermarkChip(canvas: Canvas, spec: QuoteCardSpec, targetSize: Int) {

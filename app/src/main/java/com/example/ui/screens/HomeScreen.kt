@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -39,7 +39,8 @@ fun HomeScreen(
     onNewQuote: () -> Unit,
     onNewBatch: () -> Unit,
     onEditQuote: (QuoteCardSpec) -> Unit,
-    onOpenExport: (QuoteCardSpec) -> Unit
+    onOpenExport: (QuoteCardSpec) -> Unit,
+    onOpenGallery: () -> Unit
 ) {
     val savedQuotes by repository.savedQuotes.collectAsStateWithLifecycle(initialValue = emptyList())
     val savedCount by repository.savedCount.collectAsStateWithLifecycle(initialValue = 0)
@@ -81,6 +82,25 @@ fun HomeScreen(
                                 lineHeight = 13.sp
                             )
                         }
+                    }
+                },
+                actions = {
+                    // Button to open full in-app gallery
+                    FilledTonalButton(
+                        onClick = onOpenGallery,
+                        colors = ButtonDefaults.filledTonalButtonColors(
+                            containerColor = StudioSurfaceVariant,
+                            contentColor = StudioPrimary
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .testTag("home_top_bar_gallery_btn")
+                    ) {
+                        Icon(Icons.Default.PhotoLibrary, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Gallery", fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -136,7 +156,7 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // 1. HERO STUDIO BANNER
@@ -186,7 +206,7 @@ fun HomeScreen(
                             )
 
                             Text(
-                                text = "No rigid templates. Complete manual control over typography, spacing, subtle watermark chips, and multi-quote batch exports.",
+                                text = "Complete manual control over typography, spacing, watermark chips, and multi-quote batch exports.",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = StudioTextSecondary,
                                 lineHeight = 18.sp
@@ -226,8 +246,127 @@ fun HomeScreen(
                 }
             }
 
-            // 2. SAVED VAULT OR CUSTOM EMPTY STATE
-            if (savedQuotes.isEmpty()) {
+            // 2. HISTORY SECTION (Recently Created Quotes + Button to open full in-app gallery)
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "History",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = StudioTextPrimary
+                        )
+                        Text(
+                            text = if (savedQuotes.isEmpty()) "Recently created quotes will appear here" else "$savedCount total quote${if (savedCount != 1) "s" else ""} in history",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = StudioTextSecondary
+                        )
+                    }
+
+                    TextButton(
+                        onClick = onOpenGallery,
+                        modifier = Modifier.testTag("home_header_open_gallery_btn")
+                    ) {
+                        Text("View Gallery", color = StudioPrimary, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(14.dp), tint = StudioPrimary)
+                    }
+                }
+            }
+
+            if (savedQuotes.isNotEmpty()) {
+                // Carousel of recently created quotes
+                item {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(14.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        items(savedQuotes) { entity ->
+                            val spec = entity.toSpec()
+                            Card(
+                                shape = RoundedCornerShape(16.dp),
+                                colors = CardDefaults.cardColors(containerColor = StudioSurface),
+                                border = BorderStroke(1.dp, StudioCardBorder),
+                                modifier = Modifier
+                                    .width(180.dp)
+                                    .clickable { onOpenExport(spec) }
+                                    .testTag("history_item_${entity.id}")
+                            ) {
+                                Column(modifier = Modifier.padding(10.dp)) {
+                                    QuoteCanvasView(
+                                        spec = spec,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clip(RoundedCornerShape(10.dp))
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Text(
+                                        text = entity.text,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = StudioTextPrimary,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    Spacer(modifier = Modifier.height(6.dp))
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "Tap to view",
+                                            fontSize = 10.sp,
+                                            color = StudioPrimary,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                        Icon(
+                                            imageVector = Icons.Default.IosShare,
+                                            contentDescription = "Export",
+                                            tint = StudioPrimary,
+                                            modifier = Modifier.size(14.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Button to open the full in app gallery that displays all quotes created by the app
+                item {
+                    OutlinedButton(
+                        onClick = onOpenGallery,
+                        shape = RoundedCornerShape(14.dp),
+                        border = BorderStroke(1.dp, StudioPrimary.copy(alpha = 0.5f)),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = StudioSurface,
+                            contentColor = StudioPrimary
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp)
+                            .testTag("btn_open_full_gallery")
+                    ) {
+                        Icon(Icons.Default.PhotoLibrary, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = "Open Full Gallery ($savedCount Quotes)",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, modifier = Modifier.size(16.dp))
+                    }
+                }
+            } else {
+                // Clean History empty state with quick actions to create or open gallery
                 item {
                     Card(
                         colors = CardDefaults.cardColors(containerColor = StudioSurface),
@@ -235,97 +374,72 @@ fun HomeScreen(
                         shape = RoundedCornerShape(16.dp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .testTag("home_empty_state")
+                            .testTag("home_history_empty_state")
                     ) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(28.dp),
+                                .padding(24.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .size(56.dp)
+                                    .size(52.dp)
                                     .clip(CircleShape)
                                     .background(StudioSurfaceVariant)
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.FormatQuote,
+                                    imageVector = Icons.Default.History,
                                     contentDescription = null,
                                     tint = StudioPrimary,
-                                    modifier = Modifier.size(28.dp)
+                                    modifier = Modifier.size(26.dp)
                                 )
                             }
 
-                            Spacer(modifier = Modifier.height(14.dp))
-
                             Text(
-                                text = "Your Canvas is Clean",
+                                text = "No Quotes Created Yet",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = StudioTextPrimary
                             )
 
-                            Spacer(modifier = Modifier.height(4.dp))
-
                             Text(
-                                text = "Tap \"New Quote\" to design a quote card from scratch with custom fonts, gradient angles, and export HD images.",
+                                text = "Quotes you create will automatically appear here in your History and in the Gallery.",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = StudioTextSecondary,
                                 textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                                 lineHeight = 18.sp
                             )
-                        }
-                    }
-                }
-            } else {
-                item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Recent Creations ($savedCount)",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = StudioTextPrimary
-                        )
-                    }
-                }
 
-                item {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(14.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        items(savedQuotes.take(6)) { entity ->
-                            val spec = entity.toSpec()
-                            Card(
-                                shape = RoundedCornerShape(16.dp),
-                                colors = CardDefaults.cardColors(containerColor = StudioSurface),
-                                border = BorderStroke(1.dp, StudioCardBorder),
-                                modifier = Modifier
-                                    .width(170.dp)
-                                    .clickable { onOpenExport(spec) }
-                            ) {
-                                Column(modifier = Modifier.padding(8.dp)) {
-                                    QuoteCanvasView(
-                                        spec = spec,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clip(RoundedCornerShape(10.dp))
-                                    )
-                                    Spacer(modifier = Modifier.height(6.dp))
-                                    Text(
-                                        text = entity.text,
-                                        fontSize = 11.sp,
-                                        color = StudioTextPrimary,
-                                        maxLines = 2,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
+                            Spacer(modifier = Modifier.height(4.dp))
+
+                            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Button(
+                                    onClick = onNewQuote,
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = StudioPrimary,
+                                        contentColor = StudioTextOnGold
+                                    ),
+                                    shape = RoundedCornerShape(12.dp),
+                                    modifier = Modifier.testTag("home_create_first_quote_btn")
+                                ) {
+                                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp), tint = StudioTextOnGold)
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text("Create Quote", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = StudioTextOnGold)
+                                }
+
+                                OutlinedButton(
+                                    onClick = onOpenGallery,
+                                    shape = RoundedCornerShape(12.dp),
+                                    colors = ButtonDefaults.outlinedButtonColors(contentColor = StudioPrimary),
+                                    border = BorderStroke(1.dp, StudioCardBorder),
+                                    modifier = Modifier.testTag("home_open_empty_gallery_btn")
+                                ) {
+                                    Icon(Icons.Default.PhotoLibrary, contentDescription = null, modifier = Modifier.size(16.dp), tint = StudioPrimary)
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text("Open Gallery", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = StudioPrimary)
                                 }
                             }
                         }
@@ -333,69 +447,9 @@ fun HomeScreen(
                 }
             }
 
-            // 3. CAPABILITIES SHOWCASE
-            item {
-                Text(
-                    text = "Studio Capabilities",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = StudioTextPrimary
-                )
-            }
-
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    FeatureCard(
-                        icon = Icons.Default.SquareFoot,
-                        title = "1:1 WYSIWYG",
-                        desc = "Pixel-for-pixel export",
-                        modifier = Modifier.weight(1f)
-                    )
-                    FeatureCard(
-                        icon = Icons.Default.Layers,
-                        title = "Batch Engine",
-                        desc = "Shared style for N cards",
-                        modifier = Modifier.weight(1f)
-                    )
-                    FeatureCard(
-                        icon = Icons.Default.Verified,
-                        title = "Gradient Chip",
-                        desc = "Watermark badge",
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-            }
-
             item {
                 Spacer(modifier = Modifier.height(80.dp))
             }
-        }
-    }
-}
-
-@Composable
-private fun FeatureCard(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    title: String,
-    desc: String,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = StudioSurface),
-        border = BorderStroke(1.dp, StudioCardBorder),
-        modifier = modifier
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Icon(icon, contentDescription = null, tint = StudioPrimary, modifier = Modifier.size(20.dp))
-            Text(text = title, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = StudioTextPrimary)
-            Text(text = desc, fontSize = 10.sp, color = StudioTextSecondary, lineHeight = 14.sp)
         }
     }
 }

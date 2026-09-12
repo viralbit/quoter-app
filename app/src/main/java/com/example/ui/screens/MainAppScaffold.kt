@@ -7,8 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -76,6 +76,9 @@ fun MainAppScaffold(
                                 },
                                 onOpenExport = { spec ->
                                     currentDestination = ScreenDestination.Export(spec)
+                                },
+                                onOpenGallery = {
+                                    selectedTab = 1
                                 }
                             )
                             1 -> HistoryScreen(
@@ -161,10 +164,10 @@ fun StudioBottomNavBar(
             ) {
                 val items = listOf(
                     Triple(0, Icons.Default.Home, "Home"),
-                    Triple(1, Icons.Default.BookmarkBorder, "Saved"),
+                    Triple(1, Icons.Default.PhotoLibrary, "Gallery"),
                     Triple(2, Icons.Default.Settings, "Settings")
                 )
-                val testTags = listOf("tab_nav_home", "tab_nav_saved", "tab_nav_settings")
+                val testTags = listOf("tab_nav_home", "tab_nav_gallery", "tab_nav_settings")
 
                 items.forEachIndexed { index, (tabIndex, icon, label) ->
                     val isSelected = selectedTab == tabIndex

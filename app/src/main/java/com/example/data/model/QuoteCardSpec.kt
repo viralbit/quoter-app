@@ -52,16 +52,7 @@ data class QuoteCardSpec(
     }
 
     fun getComposeFontWeight(): FontWeight {
-        return when (fontWeightValue) {
-            300 -> FontWeight.Light
-            400 -> FontWeight.Normal
-            500 -> FontWeight.Medium
-            600 -> FontWeight.SemiBold
-            700 -> FontWeight.Bold
-            800 -> FontWeight.ExtraBold
-            900 -> FontWeight.Black
-            else -> FontWeight.Bold
-        }
+        return FontWeight(fontWeightValue.coerceIn(1, 1000))
     }
 
     fun getComposeTextAlign(): TextAlign {
@@ -97,12 +88,16 @@ object StudioPresets {
         0xFFF8F9FAL, // Soft Off-White
         0xFFFFFBEBL, // Warm Cream
         0xFFF1F5F9L, // Crisp Slate
+        0xFFE2E8F0L, // Platinum Gray
         0xFF0D0D0DL, // Near Black
         0xFF171717L, // Deep Charcoal
         0xFF1E1B29L, // Dark Plum
         0xFF1B2838L, // Midnight Navy
         0xFF0D2818L, // Deep Forest
-        0xFF2B1704L  // Deep Amber
+        0xFF2B1704L, // Deep Amber
+        0xFF2E1020L, // Rich Wine
+        0xFF0F2B36L, // Deep Teal
+        0xFF3B1E08L  // Warm Espresso
     )
 
     val textColors = listOf(
@@ -171,7 +166,7 @@ object StudioPresets {
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val base = Typeface.create(familyString, Typeface.NORMAL)
-            Typeface.create(base, weight, false)
+            Typeface.create(base, weight.coerceIn(1, 1000), false)
         } else {
             Typeface.create(familyString, style)
         }

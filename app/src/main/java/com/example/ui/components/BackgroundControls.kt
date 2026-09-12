@@ -55,7 +55,7 @@ fun BackgroundControls(
             .padding(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // 1. Background Type Tabs
+        // 1. Background Type Tabs (SOLID, PHOTO)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -63,11 +63,12 @@ fun BackgroundControls(
                 .background(StudioSurfaceVariant)
                 .border(1.dp, StudioCardBorder, RoundedCornerShape(12.dp))
                 .padding(4.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            val bgTypes = listOf("GRADIENT", "SOLID", "PHOTO")
+            val bgTypes = listOf("SOLID", "PHOTO")
+            val effectiveType = if (spec.backgroundType == "PHOTO") "PHOTO" else "SOLID"
             bgTypes.forEach { type ->
-                val isSelected = spec.backgroundType == type
+                val isSelected = effectiveType == type
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -79,11 +80,7 @@ fun BackgroundControls(
                         .testTag("bg_type_$type")
                 ) {
                     Text(
-                        text = when (type) {
-                            "GRADIENT" -> "Gradient"
-                            "SOLID" -> "Solid"
-                            else -> "Photo"
-                        },
+                        text = if (type == "SOLID") "Solid Color" else "Photo",
                         fontSize = 13.sp,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                         color = if (isSelected) StudioTextOnGold else StudioTextPrimary
@@ -93,112 +90,7 @@ fun BackgroundControls(
         }
 
         // 2. Type Specific Controls
-        when (spec.backgroundType) {
-            "GRADIENT" -> {
-                // Gradient Presets
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(
-                        text = "Gradient Presets",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = StudioTextPrimary,
-                        fontWeight = FontWeight.Bold
-                    )
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        items(StudioPresets.gradients) { preset ->
-                            val isSelected = spec.bgColor1 == preset.color1 && spec.bgColor2 == preset.color2
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .size(width = 90.dp, height = 48.dp)
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(
-                                        Brush.linearGradient(
-                                            listOf(Color(preset.color1), Color(preset.color2))
-                                        )
-                                    )
-                                    .border(
-                                        width = if (isSelected) 2.5.dp else 1.dp,
-                                        color = if (isSelected) StudioPrimary else StudioCardBorder,
-                                        shape = RoundedCornerShape(10.dp)
-                                    )
-                                    .clickable {
-                                        onSpecChange(
-                                            spec.copy(
-                                                bgColor1 = preset.color1,
-                                                bgColor2 = preset.color2,
-                                                gradientAngle = preset.defaultAngle
-                                            )
-                                        )
-                                    }
-                                    .testTag("preset_${preset.name.replace(" ", "_")}")
-                            ) {
-                                Text(
-                                    text = preset.name,
-                                    fontSize = 10.sp,
-                                    color = Color.White,
-                                    fontWeight = FontWeight.SemiBold,
-                                    modifier = Modifier.padding(4.dp)
-                                )
-                            }
-                        }
-                    }
-                }
-
-                // Gradient Angle
-                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = "Gradient Angle",
-                            style = MaterialTheme.typography.labelLarge,
-                            color = StudioTextPrimary,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = "${spec.gradientAngle.toInt()}°",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = StudioPrimary,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    val angles = listOf(0f, 45f, 90f, 135f, 180f, 225f, 270f, 315f)
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        items(angles) { angle ->
-                            val isSelected = spec.gradientAngle.toInt() == angle.toInt()
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .size(42.dp)
-                                    .clip(CircleShape)
-                                    .background(if (isSelected) StudioPrimary else StudioSurfaceVariant)
-                                    .border(
-                                        width = 1.dp,
-                                        color = if (isSelected) StudioPrimary else StudioCardBorder,
-                                        shape = CircleShape
-                                    )
-                                    .clickable { onSpecChange(spec.copy(gradientAngle = angle)) }
-                                    .testTag("angle_${angle.toInt()}")
-                            ) {
-                                Text(
-                                    text = "${angle.toInt()}°",
-                                    fontSize = 11.sp,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                    color = if (isSelected) StudioTextOnGold else StudioTextPrimary
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
+        when (if (spec.backgroundType == "PHOTO") "PHOTO" else "SOLID") {
             "SOLID" -> {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
@@ -223,7 +115,14 @@ fun BackgroundControls(
                                         color = if (isSelected) StudioPrimary else StudioCardBorder,
                                         shape = CircleShape
                                     )
-                                    .clickable { onSpecChange(spec.copy(bgColor1 = colorLong)) }
+                                    .clickable {
+                                        onSpecChange(
+                                            spec.copy(
+                                                backgroundType = "SOLID",
+                                                bgColor1 = colorLong
+                                            )
+                                        )
+                                    }
                                     .testTag("solid_color_${colorLong.toString(16)}")
                             )
                         }
@@ -264,7 +163,7 @@ fun BackgroundControls(
                                     onSpecChange(
                                         spec.copy(
                                             photoUri = null,
-                                            backgroundType = "GRADIENT"
+                                            backgroundType = "SOLID"
                                         )
                                     )
                                 },

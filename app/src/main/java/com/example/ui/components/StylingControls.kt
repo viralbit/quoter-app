@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.FormatAlignLeft
 import androidx.compose.material.icons.automirrored.filled.FormatAlignRight
 import androidx.compose.material.icons.filled.FormatAlignCenter
+import androidx.compose.material.icons.filled.FormatBold
 import androidx.compose.material.icons.filled.FormatLineSpacing
 import androidx.compose.material.icons.filled.FormatSize
 import androidx.compose.material.icons.filled.Refresh
@@ -178,94 +179,148 @@ fun StylingControls(
             onValueChange = { onSpecChange(spec.copy(lineSpacingMultiplier = (it * 100).roundToInt() / 100f)) }
         )
 
-        // 5. Text Alignment & Font Weight
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // Alignment Group
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        // 5. Alight Motion-Style Font Weight Adjuster (Exceeds current max weight up to 1200)
+        AlightStyleScrubber(
+            title = "Font Weight",
+            icon = Icons.Default.FormatBold,
+            value = spec.fontWeightValue.toFloat(),
+            valueRange = 100f..1200f,
+            step = 50f,
+            defaultValue = 600f,
+            formatDisplay = { w ->
+                val intW = w.toInt()
+                when (intW) {
+                    in 100..199 -> "$intW Thin"
+                    in 200..299 -> "$intW ExLight"
+                    in 300..399 -> "$intW Light"
+                    in 400..499 -> "$intW Regular"
+                    in 500..599 -> "$intW Medium"
+                    in 600..699 -> "$intW Semi"
+                    in 700..799 -> "$intW Bold"
+                    in 800..899 -> "$intW ExBold"
+                    in 900..999 -> "$intW Black"
+                    in 1000..1099 -> "$intW Ultra"
+                    else -> "$intW Heavy+"
+                }
+            },
+            presets = listOf(
+                Pair("Thin", 100f),
+                Pair("Light", 300f),
+                Pair("Reg", 400f),
+                Pair("Medium", 500f),
+                Pair("Semi", 600f),
+                Pair("Bold", 700f),
+                Pair("Extra", 800f),
+                Pair("Black", 900f),
+                Pair("Ultra", 1000f),
+                Pair("Max+", 1200f)
+            ),
+            testTag = "font_weight_scrubber",
+            onValueChange = { onSpecChange(spec.copy(fontWeightValue = it.roundToInt())) }
+        )
+
+        // 6. Buttons to adjust to preset weights
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
-                    text = "Alignment",
+                    text = "Weight Presets",
                     style = MaterialTheme.typography.labelLarge,
                     color = StudioTextPrimary,
                     fontWeight = FontWeight.Bold
                 )
-                Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(StudioSurfaceVariant)
-                        .border(1.dp, StudioCardBorder, RoundedCornerShape(12.dp))
-                        .padding(4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    val alignments = listOf(
-                        Triple("Left", Icons.AutoMirrored.Filled.FormatAlignLeft, "align_left_button"),
-                        Triple("Center", Icons.Default.FormatAlignCenter, "align_center_button"),
-                        Triple("Right", Icons.AutoMirrored.Filled.FormatAlignRight, "align_right_button")
-                    )
-                    alignments.forEach { (alignName, icon, tag) ->
-                        val isSelected = spec.textAlignValue.equals(alignName, ignoreCase = true)
-                        IconButton(
-                            onClick = { onSpecChange(spec.copy(textAlignValue = alignName)) },
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(36.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(if (isSelected) StudioPrimary else Color.Transparent)
-                                .testTag(tag)
-                        ) {
-                            Icon(
-                                imageVector = icon,
-                                contentDescription = alignName,
-                                tint = if (isSelected) StudioTextOnGold else StudioTextMuted,
-                                modifier = Modifier.size(18.dp)
+                Text(
+                    text = "${spec.fontWeightValue}",
+                    fontSize = 12.sp,
+                    color = StudioPrimary,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            }
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                val weightPresets = listOf(
+                    Pair(100, "Thin (100)"),
+                    Pair(300, "Light (300)"),
+                    Pair(400, "Regular (400)"),
+                    Pair(500, "Medium (500)"),
+                    Pair(600, "Semi (600)"),
+                    Pair(700, "Bold (700)"),
+                    Pair(800, "Extra (800)"),
+                    Pair(900, "Black (900)"),
+                    Pair(1000, "Ultra (1000)"),
+                    Pair(1200, "Heavy+ (1200)")
+                )
+                items(weightPresets) { (wVal, label) ->
+                    val isSelected = spec.fontWeightValue == wVal
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(if (isSelected) StudioPrimary else StudioSurfaceVariant)
+                            .border(
+                                width = if (isSelected) 1.5.dp else 1.dp,
+                                color = if (isSelected) StudioPrimary else StudioCardBorder,
+                                shape = RoundedCornerShape(10.dp)
                             )
-                        }
+                            .clickable { onSpecChange(spec.copy(fontWeightValue = wVal)) }
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
+                            .testTag("preset_weight_btn_$wVal")
+                    ) {
+                        Text(
+                            text = label,
+                            fontSize = 12.sp,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                            color = if (isSelected) StudioTextOnGold else StudioTextPrimary
+                        )
                     }
                 }
             }
+        }
 
-            // Weight Group
-            Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(
-                    text = "Weight",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = StudioTextPrimary,
-                    fontWeight = FontWeight.Bold
+        // 7. Text Alignment
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(
+                text = "Text Alignment",
+                style = MaterialTheme.typography.labelLarge,
+                color = StudioTextPrimary,
+                fontWeight = FontWeight.Bold
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(StudioSurfaceVariant)
+                    .border(1.dp, StudioCardBorder, RoundedCornerShape(12.dp))
+                    .padding(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                val alignments = listOf(
+                    Triple("Left", Icons.AutoMirrored.Filled.FormatAlignLeft, "align_left_button"),
+                    Triple("Center", Icons.Default.FormatAlignCenter, "align_center_button"),
+                    Triple("Right", Icons.AutoMirrored.Filled.FormatAlignRight, "align_right_button")
                 )
-                Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(StudioSurfaceVariant)
-                        .border(1.dp, StudioCardBorder, RoundedCornerShape(12.dp))
-                        .padding(4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    val weights = listOf(
-                        Pair(400, "Reg"),
-                        Pair(600, "Semi"),
-                        Pair(800, "Bold")
-                    )
-                    weights.forEach { (wValue, label) ->
-                        val isSelected = spec.fontWeightValue == wValue
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(36.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(if (isSelected) StudioPrimary else Color.Transparent)
-                                .clickable { onSpecChange(spec.copy(fontWeightValue = wValue)) }
-                                .testTag("weight_btn_$wValue")
-                        ) {
-                            Text(
-                                text = label,
-                                fontSize = 12.sp,
-                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                                color = if (isSelected) StudioTextOnGold else StudioTextPrimary
-                            )
-                        }
+                alignments.forEach { (alignName, icon, tag) ->
+                    val isSelected = spec.textAlignValue.equals(alignName, ignoreCase = true)
+                    IconButton(
+                        onClick = { onSpecChange(spec.copy(textAlignValue = alignName)) },
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(38.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(if (isSelected) StudioPrimary else Color.Transparent)
+                            .testTag(tag)
+                    ) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = alignName,
+                            tint = if (isSelected) StudioTextOnGold else StudioTextMuted,
+                            modifier = Modifier.size(18.dp)
+                        )
                     }
                 }
             }

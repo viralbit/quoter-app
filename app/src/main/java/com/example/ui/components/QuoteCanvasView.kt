@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -51,39 +52,30 @@ fun QuoteCanvasView(
             )
             .testTag("quote_canvas_preview")
     ) {
-        // 1. Background layer
-        when (spec.backgroundType) {
-            "SOLID" -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color(spec.bgColor1))
-                )
-            }
-            "PHOTO" -> {
-                if (spec.photoUri != null) {
-                    AsyncImage(
-                        model = ImageRequest.Builder(context)
-                            .data(Uri.parse(spec.photoUri))
-                            .crossfade(true)
-                            .build(),
-                        contentDescription = "Background Photo",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                    // Dim overlay for legibility
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color(0x7F000000))
-                    )
-                } else {
-                    GradientBackground(spec)
-                }
-            }
-            else -> {
-                GradientBackground(spec)
-            }
+        // 1. Background layer (Solid or Photo)
+        if (spec.backgroundType == "PHOTO" && spec.photoUri != null) {
+            AsyncImage(
+                model = ImageRequest.Builder(context)
+                    .data(Uri.parse(spec.photoUri))
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "Background Photo",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+            // Dim overlay for legibility
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0x7F000000))
+            )
+        } else {
+            // SOLID
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(spec.bgColor1))
+            )
         }
 
         // 2. Text Content (Centered in Canvas - No Author)
@@ -93,6 +85,19 @@ fun QuoteCanvasView(
                 .padding(28.dp),
             contentAlignment = Alignment.Center
         ) {
+            val textStyle = if (spec.fontWeightValue > 1000) {
+                val extraRatio = ((spec.fontWeightValue - 1000) / 200f).coerceIn(0f, 1f)
+                LocalTextStyle.current.copy(
+                    shadow = androidx.compose.ui.graphics.Shadow(
+                        color = Color(spec.textColor),
+                        offset = androidx.compose.ui.geometry.Offset(0.6f * extraRatio, 0.6f * extraRatio),
+                        blurRadius = 0.4f * extraRatio
+                    )
+                )
+            } else {
+                LocalTextStyle.current
+            }
+
             Text(
                 text = spec.text.ifBlank { "Type your quote..." },
                 fontSize = spec.fontSize.sp,
@@ -102,6 +107,7 @@ fun QuoteCanvasView(
                 textAlign = spec.getComposeTextAlign(),
                 letterSpacing = spec.letterSpacingSp.sp,
                 lineHeight = (spec.fontSize * spec.lineSpacingMultiplier).sp,
+                style = textStyle,
                 modifier = Modifier
                     .fillMaxWidth()
                     .testTag("quote_text_display")
@@ -146,31 +152,6 @@ fun QuoteCanvasView(
             }
         }
     }
-}
-
-@Composable
-private fun GradientBackground(spec: QuoteCardSpec) {
-    val angleRad = Math.toRadians(spec.gradientAngle.toDouble())
-    val cos = cos(angleRad).toFloat()
-    val sin = sin(angleRad).toFloat()
-
-    // Normalized coordinate offsets for Brush.linearGradient
-    val startX = 0.5f - (cos * 0.5f)
-    val startY = 0.5f - (sin * 0.5f)
-    val endX = 0.5f + (cos * 0.5f)
-    val endY = 0.5f + (sin * 0.5f)
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.linearGradient(
-                    colors = listOf(Color(spec.bgColor1), Color(spec.bgColor2)),
-                    start = androidx.compose.ui.geometry.Offset(startX * 1000f, startY * 1000f),
-                    end = androidx.compose.ui.geometry.Offset(endX * 1000f, endY * 1000f)
-                )
-            )
-    )
 }
 
 @Composable

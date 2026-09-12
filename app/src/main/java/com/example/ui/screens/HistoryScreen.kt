@@ -55,12 +55,20 @@ fun HistoryScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = "Saved History",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        color = StudioTextPrimary
-                    )
+                    Column {
+                        Text(
+                            text = "Quote Gallery",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            color = StudioTextPrimary
+                        )
+                        Text(
+                            text = if (savedQuotes.isEmpty()) "All created quotes" else "${savedQuotes.size} quotes created",
+                            fontSize = 11.sp,
+                            color = StudioPrimaryVariant,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = StudioAppBg,
@@ -100,7 +108,7 @@ fun HistoryScreen(
                     Spacer(modifier = Modifier.height(18.dp))
 
                     Text(
-                        text = "No Saved Cards Yet",
+                        text = "No Quotes in Gallery",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = StudioTextPrimary
@@ -109,7 +117,7 @@ fun HistoryScreen(
                     Spacer(modifier = Modifier.height(6.dp))
 
                     Text(
-                        text = "Cards you explicitly choose to save after exporting will appear in this private vault.",
+                        text = "Quotes you create in the studio will automatically be stored and showcased here in your full gallery.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = StudioTextSecondary,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
